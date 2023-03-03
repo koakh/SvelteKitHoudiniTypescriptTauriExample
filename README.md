@@ -1,13 +1,5 @@
 # README
 
-## Git Init
-
-```shell
-$ git init
-$ git add .
-$ git -am "first commit"
-```
-
 ## Install Rust
 
 - [rustup.rs - The Rust toolchain installer](https://rustup.rs/)
@@ -147,9 +139,17 @@ $ cargo tauri dev
 $ pnpm tauri dev
 ```
 
+## Git Init
+
+```shell
+$ git init
+$ git add .
+$ git commit -am "first commit"
+```
+
 ## Install Skeleton + Tailwind Css
 
-```
+```shell
 $ pnpm add -D @skeletonlabs/skeleton 
 $ npx svelte-add@latest tailwindcss
 $ pnpm i
