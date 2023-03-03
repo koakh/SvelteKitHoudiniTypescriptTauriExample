@@ -57,6 +57,16 @@ To close the dev server, hit Ctrl-C
 Stuck? Visit us at https://svelte.dev/chat
 ```
 
+## Add Scripts to Package.json
+
+```json
+{
+	"scripts": {
+    "tauri": "cargo tauri dev"
+  }
+}
+```
+
 ## SvelteKit in SSG mode
 
 ```shell
@@ -124,7 +134,7 @@ $ cargo tauri init
 
 ❯ cargo tauri init
 ✔ What is your app name? · svelte-kit-houdini-typescript-tauri-example
-✔ What should the window title be? · SvelteKitHoudiniTypescriptTauriExample
+✔ What should the window title be? · sveltekit-houdini-typescript-tauri-example
 ✔ Where are your web assets (HTML/CSS/JS) located, relative to the "<current dir>/src-tauri/tauri.conf.json" file that will be created? · ../build
 ✔ What is the url of your dev server? · http://localhost:5173
 ✔ What is your frontend dev command? · pnpm dev
@@ -251,21 +261,137 @@ final
 <body data-sveltekit-preload-data="hover" data-theme="rocket">
 ```
 
-## Add Scripts to Package.json
-
-```json
-{
-	"scripts": {
-    "tauri": "cargo tauri dev"
-  }
-}
-```
-
 test skeleton and tailwind
 
 ```shell
 $ pnpm tauri
 ```
+
+## Commit Project
+
+```shell
+$ git add .
+```
+
+## Add Simple GraphQL Server
+
+```shell
+$ mkdir server
+```
+
+create `server/package.json`
+
+```json
+{
+	"dependencies": {
+		"cors": "^2.8.5",
+		"express": "^4.18.2",
+		"express-graphql": "^0.12.0",
+		"graphql": "^16.6.0",
+		"graphql-subscriptions": "^2.0.0",
+		"subscriptions-transport-ws": "^0.11.0"
+	}
+}
+```
+
+### Install dependencies
+
+```shell
+$ cd server && pnpm i && cd ..
+```
+
+create `server/server.js`
+
+```js
+const express = require('express');
+const { graphqlHTTP } = require('express-graphql');
+const { buildSchema, execute, subscribe } = require('graphql');
+// Pull in some specific Apollo packages:
+const { PubSub } = require('graphql-subscriptions');
+const { SubscriptionServer } = require('subscriptions-transport-ws');
+// cors
+const cors = require('cors')
+
+// Create a server:
+const app = express();
+
+// Create a schema and a root resolver:
+const schema = buildSchema(`#graphql
+	type Book {
+		title: String!
+		author: String!
+	}
+
+	type Query {
+		books: [Book]
+	}
+
+	# new: subscribe to all the latest books!
+	type Subscription {
+		newBooks: Book!
+	}
+`);
+
+const pubsub = new PubSub();
+const rootValue = {
+	books: [
+		{
+			title: "Some non sense Title",
+			author: "Mário Monteiro",
+		},
+		{
+			title: "Lost imagination",
+			author: "Alexandre Monteiro",
+		}
+	],
+	newBooks: () => pubsub.asyncIterator("BOOKS_TOPIC")
+};
+
+// enable cors
+app.use(cors())
+
+// handle incoming HTTP requests as before:
+app.use(graphqlHTTP({
+	schema,
+	rootValue
+}));
+
+// start the server:
+const server = app.listen(8080, () => console.log("Server started on port 8080"));
+
+// handle incoming websocket subscriptions too:
+SubscriptionServer.create({ schema, rootValue, execute, subscribe }, {
+	// Listens for 'upgrade' websocket events on the raw server
+	server
+});
+
+// ...some time later, push updates to subscribers:
+pubsub.publish("BOOKS_TOPIC", {
+	title: 'The Doors of Stone',
+	author: 'Patrick Rothfuss',
+});
+```
+
+### Add Scripts to Package.json
+
+```json
+{
+	"scripts": {
+    "server": "cd server && node server.js"
+  }
+}
+```
+
+### Run Server
+
+in a new terminal run:
+
+```shell
+$ pnpm server
+Server started on port 8080
+```
+
+> leave server running, houdini require a running server to create runtime ate boot app, and to work with hot reload and graphql changes
 
 ## Setup Houdini
 
@@ -274,3 +400,5 @@ $ pnpm tauri
 ```shell
 $ pnpm dlx houdini@latest init
 ```
+
+### Gener
