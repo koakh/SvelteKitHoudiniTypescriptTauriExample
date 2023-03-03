@@ -271,6 +271,7 @@ $ pnpm tauri
 
 ```shell
 $ git add .
+$ git commit -am "before add graphql server"
 ```
 
 ## Add Simple GraphQL Server
@@ -393,12 +394,103 @@ Server started on port 8080
 
 > leave server running, houdini require a running server to create runtime ate boot app, and to work with hot reload and graphql changes
 
+## Commit Project
+
+```shell
+$ git add .
+$ git commit -am "before setup houdini"
+```
+
 ## Setup Houdini
 
 - [Houdini - Setting Up Your Project](https://www.houdinigraphql.com/guides/setting-up-your-project)
 
+use running graphql server url `http://localhost:8080/graphql`
+
 ```shell
 $ pnpm dlx houdini@latest init
+
+✔ Will you use a remote GraphQL API? … yes
+✔ What's the URL for your api? … http://localhost:8080/graphql
+
+🔎 Here's what we found:
+✨ SvelteKit
+📦 ES Modules
+🟦 TypeScript
+
+🚧 Generating project files...
+
+🎩 Welcome to Houdini!
+
+👉 Next Steps
+1️⃣  Finalize your installation: pnpm i
+2️⃣  Start your application:     pnpm dev
+
+# finalize your installation
+$ pnpm i
+
+devDependencies:
++ houdini 1.0.7
++ houdini-svelte 1.0.7
+
+# start your application:     
+$ pnpm dev
+
+  VITE v4.1.4  ready in 2400 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+  ➜  press h to show help
+1:27:25 AM [vite-plugin-svelte] ssr compile done.
+package                                 files     time     avg
+sveltekithoudinitypescripttauriexample      1   71.7ms  71.7ms
+```
+
+### Check Houdini Magic Dirs/Files
+
+inspect bellow created and updated files
+
+- `src/client.ts`
+- `$houdini`
+- `.graphqlrc.yaml`
+- `houdini.config.js`
+- `schema.graphql`
+- `svelte.config.js`
+- `tsconfig.json`
+- `vite.config.js`
+
+```shell
+$ tree '$houdini' -L 2
+
+$houdini
+├── artifacts
+│   └── index.js
+├── graphql
+│   ├── documents.gql
+│   ├── enums.d.ts
+│   ├── enums.js
+│   ├── index.d.ts
+│   ├── index.js
+│   └── schema.graphql
+├── index.d.ts
+├── index.js
+├── plugins
+│   ├── houdini-svelte
+│   ├── index.d.ts
+│   └── index.js
+├── runtime
+│   ├── cache
+│   ├── client
+│   ├── generated.d.ts
+│   ├── generated.js
+│   ├── imports
+│   ├── index.d.ts
+│   ├── index.js
+│   ├── lib
+│   ├── package.json
+│   └── public
+└── types
+    └── src
 ```
 
 ### Gener
