@@ -149,18 +149,128 @@ $ git commit -am "first commit"
 
 ## Install Skeleton + Tailwind Css
 
+- [Install Tailwind CSS with SvelteKit - Tailwind CSS](https://tailwindcss.com/docs/guides/sveltekit)
+- [Skeleton — UI Toolkit for Svelte + Tailwind](https://www.skeleton.dev/docs/get-started)
+
+### Tailwind CSS
+
 ```shell
 $ pnpm add -D @skeletonlabs/skeleton 
-$ npx svelte-add@latest tailwindcss
+$ pnpm dlx svelte-add@latest tailwindcss
+
+PostCSS
+ ✅ successfully set up!
+Create or find an existing issue at https://github.com/svelte-add/svelte-add/issues if this is wrong.
+
+Tailwind CSS
+ ✅ successfully set up!
+Create or find an existing issue at https://github.com/svelte-add/svelte-add/issues if this is wrong.
+
 $ pnpm i
 
+devDependencies:
++ autoprefixer 10.4.13
++ postcss 8.4.21
++ postcss-load-config 4.0.1
++ svelte-preprocess 4.10.7 (5.0.1 is available)
++ tailwindcss 3.2.7
 ```
 
+Then open your global stylesheet in `/src/app.postcss` and remove the following three `@tailwind` directives introduced by Svelte-Add. These will be redudant.
+
+`src/app.postcss`
+
+```
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+Apply these following three changes to your `tailwind.config.cjs`, found in the root of your project.
+
+```js
+const config = {
+	// apply the dark mode class setting:
+	darkMode: 'class',
+	content: [
+		'./src/**/*.{html,js,svelte,ts}',
+		// append the path for the Skeleton NPM package and files:
+		require('path').join(require.resolve('@skeletonlabs/skeleton'), '../**/*.{html,js,svelte,ts}'),
+	],
+	theme: {
+		extend: {}
+	},
+	plugins: [
+		// append the Skeleton plugin to the end of this list
+		...require('@skeletonlabs/skeleton/tailwind/skeleton.cjs')()
+	]
+};
+
+module.exports = config;
+```
+
+### Stylesheets
+
+Ensure the following stylesheets are added to your root layout in `src/routes/+layout.svelte`
+
+Make sure each of these stylesheets are present and in the order shown.
+
+```ts
+<script>
+  // skeleton: Make sure each of these stylesheets are present and in the order shown.
+	// your selected Skeleton theme:
+	import '@skeletonlabs/skeleton/themes/theme-skeleton.css';
+	// this contains the bulk of Skeletons required styles:
+	import '@skeletonlabs/skeleton/styles/all.css';
+	// finally, your application's global stylesheet (sometimes labeled 'app.css')
+	import '../app.postcss';
+</script>
+
+<slot />
+```
+
+### Themes
+
+Select a theme, then copy the import statement into your root layout in `/src/routes/+layout.svelte`. Replace any existing theme.
+
+```ts
+import '@skeletonlabs/skeleton/themes/theme-rocket.css';
+```
+
+To enable bonus features (ex: fonts and backgrounds) for preset themes, apply the following attribute in `app.html`.
+
+`app.html`
+
+```html
+<body data-theme="rocket">
+```
+
+final
+
+```html
+<body data-sveltekit-preload-data="hover" data-theme="rocket">
+```
+
+## Add Scripts to Package.json
+
+```json
+{
+	"scripts": {
+    "tauri": "cargo tauri dev"
+  }
+}
+```
+
+test skeleton and tailwind
+
+```shell
+$ pnpm tauri
+```
 
 ## Setup Houdini
 
 - [Houdini - Setting Up Your Project](https://www.houdinigraphql.com/guides/setting-up-your-project)
 
 ```shell
-$ npx houdini@latest init
+$ pnpm dlx houdini@latest init
 ```
