@@ -1,1 +1,5 @@
 /* Write your global styles here, in PostCSS syntax */
+:root{
+  --theme-rounded-container: theme(borderRadius.md);
+  --theme-rounded-base: theme(borderRadius.md);
+}

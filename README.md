@@ -18,6 +18,7 @@
 		- [Page Setup](#page-setup)
 		- [Add a Component](#add-a-component)
 	- [Add @tabler/icons-svelte](#add-tablericons-svelte)
+	- [Tweak Skeleton Css](#tweak-skeleton-css)
 	- [Commit Project](#commit-project)
 	- [Add Simple GraphQL Server](#add-simple-graphql-server)
 		- [Install dependencies](#install-dependencies)
@@ -441,24 +442,26 @@ add `<IconHeart size={48} stroke={1} />` tabler icon to `+page.svelte` to test s
 </div>
 ```
 
+## Tweak Skeleton Css
+
+style rounded container and base
+
+`src/app.css`
+
+```postcss
+/* Write your global styles here, in PostCSS syntax */
+:root{
+  --theme-rounded-container: theme(borderRadius.md);
+  --theme-rounded-base: theme(borderRadius.md);
+}
+```
+
 ## Commit Project
 
 ```shell
 $ git add .
 $ git commit -am "before add graphql server"
 ```
-
-add to `<IconHeart/> `
-
-```svelte
-<div class="container mx-auto p-8 space-y-8">
-	<IconHeart size={48} stroke={1} /> <h1>Hello Skeleton</h1>
-	<section>
-	</section>
-</div>
-```
-
-
 
 ## Add Simple GraphQL Server
 
