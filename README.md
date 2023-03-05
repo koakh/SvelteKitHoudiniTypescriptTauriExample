@@ -13,6 +13,11 @@
 		- [Stylesheets](#stylesheets)
 		- [Themes](#themes)
 	- [Follow Skeleton Quickstart to add some Stuff to our App](#follow-skeleton-quickstart-to-add-some-stuff-to-our-app)
+		- [add `AppShell` to `+layout.svelte`](#add-appshell-to-layoutsvelte)
+		- [Add Sidebar Navigation](#add-sidebar-navigation)
+		- [Page Setup](#page-setup)
+		- [Add a Component](#add-a-component)
+	- [Add @tabler/icons-svelte](#add-tablericons-svelte)
 	- [Commit Project](#commit-project)
 	- [Add Simple GraphQL Server](#add-simple-graphql-server)
 		- [Install dependencies](#install-dependencies)
@@ -23,7 +28,6 @@
 		- [Check Houdini Magic Dirs/Files](#check-houdini-magic-dirsfiles)
 	- [Create SvelteKit +Layout.svelte](#create-sveltekit-layoutsvelte)
 		- [Create Houdini client](#create-houdini-client)
-
 
 ## Install Rust
 
@@ -87,8 +91,8 @@ Stuck? Visit us at https://svelte.dev/chat
 ```json
 {
 	"scripts": {
-    "tauri": "cargo tauri dev"
-  }
+		"tauri": "cargo tauri dev"
+	}
 }
 ```
 
@@ -110,7 +114,7 @@ with
 
 ```js
 // This was changed from adapter-auto
-import adapter from '@sveltejs/adapter-static'
+import adapter from '@sveltejs/adapter-static';
 ```
 
 Lastly, we need to **disable SSR and enable prerendering** by adding a root `+layout.ts` file (or `+layout.js` if you are not using TypeScript) with these contents:
@@ -190,7 +194,7 @@ $ git commit -am "first commit"
 ### Tailwind CSS
 
 ```shell
-$ pnpm add -D @skeletonlabs/skeleton 
+$ pnpm add -D @skeletonlabs/skeleton
 $ pnpm dlx svelte-add@latest tailwindcss
 
 PostCSS
@@ -211,14 +215,15 @@ devDependencies:
 + tailwindcss 3.2.7
 ```
 
-Then open your global stylesheet in `/src/app.postcss` and remove the following three `@tailwind` directives introduced by Svelte-Add. These will be redudant.
+Then open your global stylesheet in `/src/app.css` and **remove** the following three `@tailwind` directives introduced by Svelte-Add. These will be redudant.
 
-`src/app.postcss`
+`src/app.css`
 
-```
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+
+```css
+- @tailwind base;
+- @tailwind components;
+- @tailwind utilities;
 ```
 
 Apply these following three changes to your `tailwind.config.cjs`, found in the root of your project.
@@ -230,7 +235,7 @@ const config = {
 	content: [
 		'./src/**/*.{html,js,svelte,ts}',
 		// append the path for the Skeleton NPM package and files:
-		require('path').join(require.resolve('@skeletonlabs/skeleton'), '../**/*.{html,js,svelte,ts}'),
+		require('path').join(require.resolve('@skeletonlabs/skeleton'), '../**/*.{html,js,svelte,ts}')
 	],
 	theme: {
 		extend: {}
@@ -254,11 +259,11 @@ Make sure each of these stylesheets are present and in the order shown.
 <script>
   // skeleton: Make sure each of these stylesheets are present and in the order shown.
 	// your selected Skeleton theme:
-	import '@skeletonlabs/skeleton/themes/theme-skeleton.css';
+	import '@skeletonlabs/skeleton/themes/theme-crimson.css';
 	// this contains the bulk of Skeletons required styles:
 	import '@skeletonlabs/skeleton/styles/all.css';
 	// finally, your application's global stylesheet (sometimes labeled 'app.css')
-	import '../app.postcss';
+	import '../app.css';
 </script>
 
 <slot />
@@ -268,57 +273,173 @@ Make sure each of these stylesheets are present and in the order shown.
 
 Select a theme, then copy the import statement into your root layout in `/src/routes/+layout.svelte`. Replace any existing theme.
 
+we select `crimson`, ex `@skeletonlabs/skeleton/themes/theme-${THEME}.css`, where ${THEME} is the desired selected theme
+
 ```ts
-import '@skeletonlabs/skeleton/themes/theme-rocket.css';
+import '@skeletonlabs/skeleton/themes/theme-crimson.css';
 ```
 
 To enable bonus features (ex: fonts and backgrounds) for preset themes, apply the following attribute in `app.html`.
 
 `app.html`
 
-```html
-<body data-theme="rocket">
-```
-
-final
+add `data-theme="crimson` into `app.html` `body`
 
 ```html
-<body data-sveltekit-preload-data="hover" data-theme="rocket">
+<body data-sveltekit-preload-data="hover" data-theme="crimson">
 ```
 
 test skeleton and tailwind
 
 ```shell
-$ pnpm tauri
+$ pnpm dev
 ```
 
 ## Follow Skeleton Quickstart to add some Stuff to our App
 
 - [Skeleton — UI Toolkit for Svelte + Tailwind](https://www.skeleton.dev/docs/quickstart)
 
+### add `AppShell` to `+layout.svelte`
 
+`+layout.svelte`
 
+```svelte
+<script>
+  // skeleton: Make sure each of these stylesheets are present and in the order shown.
+	// your selected Skeleton theme:
+	import '@skeletonlabs/skeleton/themes/theme-crimson.css';
+	// this contains the bulk of Skeletons required styles:
+	import '@skeletonlabs/skeleton/styles/all.css';
+	// finally, your application's global stylesheet (sometimes labeled 'app.css')
+	import '../app.css';
+	import { AppShell, AppBar } from '@skeletonlabs/skeleton';
+</script>
 
+<!-- App Shell -->
+<AppShell>
+	<svelte:fragment slot="header">
+		<!-- App Bar -->
+		<AppBar>
+			<svelte:fragment slot="lead">
+				<strong class="text-xl uppercase">Skeleton</strong>
+			</svelte:fragment>
+			<svelte:fragment slot="trail">
+				<a
+					class="btn btn-sm variant-ghost-surface"
+					href="https://discord.gg/EXqV7W8MtY"
+					target="_blank"
+					rel="noreferrer"
+				>
+					Discord
+				</a>
+				<a
+					class="btn btn-sm variant-ghost-surface"
+					href="https://twitter.com/SkeletonUI"
+					target="_blank"
+					rel="noreferrer"
+				>
+					Twitter
+				</a>
+				<a
+					class="btn btn-sm variant-ghost-surface"
+					href="https://github.com/skeletonlabs/skeleton"
+					target="_blank"
+					rel="noreferrer"
+				>
+					GitHub
+				</a>
+			</svelte:fragment>
+		</AppBar>
+	</svelte:fragment>
+	<!-- Page Route Content -->
+	<slot />
+</AppShell>
+```
 
-Problems? Open an issue on https://github.com/skeletonlabs/skeleton/issues if none exists already.
+### Add Sidebar Navigation
 
-✔ Add type checking with TypeScript? › Yes, using TypeScript syntax
-✔ Add ESLint for code linting? … No / Yes
-✔ Add Prettier for code formatting? … No / Yes
-✔ Add Playwright for browser testing? … No / Yes
-✔ Add Vitest for unit testing? … No / Yes
-✔ Enable Svelte-Kit experimental inspector http://bit.ly/3Hu0BGf ? … No / Yes
-✔ Pick tailwind plugins to add: › forms, typography, line-clamp
-✔ Select a theme: › Skeleton
-✔ Which Skeleton app template? › Skeleton Welcome
+Let's customize our App Shell's sidebar slot. Open `/src/routes/+layout.svelte` and add the following Tailwind utility classes to the `AppShell` `slotSidebarLeft` prop.
 
-> By selecting the `Welcome` template the project will come preconfigured with both an App Shell and App Bar components in `/src/routes/+layout.svelte`.
+`AppShell`
 
+change
 
+```svelte
+<AppShell>
+```
 
+to
 
+```svelte
+<AppShell slotSidebarLeft="bg-surface-500/5 w-56 p-4">
+```
 
+Next, let's implement a navigation list within the App Shell's left sidebar slot. Append this slot fragement alongside any other fragment within the `AppShell`.
 
+```svelte
+<svelte:fragment slot="sidebarLeft">
+	<!-- Insert the list: -->
+	<nav class="list-nav">
+		<ul>
+			<li><a href="/">Home</a></li>
+			<li><a href="/about">About</a></li>
+		</ul>
+	</nav>
+	<!-- --- -->
+</svelte:fragment>
+```
+
+### Page Setup
+
+Let's add some basic content to our homepage. Open `/src/routes/+page.svelte` and replace the contents with the following. This will **provide multiple elements automatically** styled by the all.css stylesheet in our root layout.
+
+```svelte
+<script lang="ts">
+	import { IconHeart } from '@tabler/icons-svelte';
+</script>
+
+<div class="container mx-auto p-8 space-y-8">
+	<h1>Hello Skeleton</h1>
+	<p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+		<p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+	<section>
+		<a class="btn variant-filled-primary" href="https://kit.svelte.dev/" target="_blank" rel="noreferrer">SvelteKit</a>
+		<a class="btn variant-filled-secondary" href="https://tailwindcss.com/" target="_blank" rel="noreferrer">Tailwind</a>
+		<a class="btn variant-filled-tertiary" href="https://github.com/" target="_blank" rel="noreferrer">GitHub</a>
+	</section>
+</div>
+```
+
+### Add a Component
+
+Finally let's implement Skeleton's `Avatar` component. First, import the component, then add it anywhere within your page, we recommend within the `.container` element.
+
+```svelte
+		...
+		<a class="btn variant-filled-tertiary" href="https://github.com/" target="_blank" rel="noreferrer">GitHub</a>
+	</section>
+  <Avatar src="https://i.pravatar.cc/" />
+</div>
+```
+
+## Add @tabler/icons-svelte
+
+add dependency with
+
+```shell
+$ pnpm add @tabler/icons-svelte
+```
+
+add `<IconHeart size={48} stroke={1} />` tabler icon to `+page.svelte` to test setup
+
+```svelte
+		...
+		<a class="btn variant-filled-tertiary" href="https://github.com/" target="_blank" rel="noreferrer">GitHub</a>
+	</section>
+  <Avatar src="https://i.pravatar.cc/" />
+  <IconHeart size={48} stroke={1} />
+</div>
+```
 
 ## Commit Project
 
@@ -326,6 +447,18 @@ Problems? Open an issue on https://github.com/skeletonlabs/skeleton/issues if no
 $ git add .
 $ git commit -am "before add graphql server"
 ```
+
+add to `<IconHeart/> `
+
+```svelte
+<div class="container mx-auto p-8 space-y-8">
+	<IconHeart size={48} stroke={1} /> <h1>Hello Skeleton</h1>
+	<section>
+	</section>
+</div>
+```
+
+
 
 ## Add Simple GraphQL Server
 
@@ -364,7 +497,7 @@ const { buildSchema, execute, subscribe } = require('graphql');
 const { PubSub } = require('graphql-subscriptions');
 const { SubscriptionServer } = require('subscriptions-transport-ws');
 // cors
-const cors = require('cors')
+const cors = require('cors');
 
 // Create a server:
 const app = express();
@@ -390,39 +523,44 @@ const pubsub = new PubSub();
 const rootValue = {
 	books: [
 		{
-			title: "Some non sense Title",
-			author: "Mário Monteiro",
+			title: 'Some non sense Title',
+			author: 'Mário Monteiro'
 		},
 		{
-			title: "Lost imagination",
-			author: "Alexandre Monteiro",
+			title: 'Lost imagination',
+			author: 'Alexandre Monteiro'
 		}
 	],
-	newBooks: () => pubsub.asyncIterator("BOOKS_TOPIC")
+	newBooks: () => pubsub.asyncIterator('BOOKS_TOPIC')
 };
 
 // enable cors
-app.use(cors())
+app.use(cors());
 
 // handle incoming HTTP requests as before:
-app.use(graphqlHTTP({
-	schema,
-	rootValue
-}));
+app.use(
+	graphqlHTTP({
+		schema,
+		rootValue
+	})
+);
 
 // start the server:
-const server = app.listen(8080, () => console.log("Server started on port 8080"));
+const server = app.listen(8080, () => console.log('Server started on port 8080'));
 
 // handle incoming websocket subscriptions too:
-SubscriptionServer.create({ schema, rootValue, execute, subscribe }, {
-	// Listens for 'upgrade' websocket events on the raw server
-	server
-});
+SubscriptionServer.create(
+	{ schema, rootValue, execute, subscribe },
+	{
+		// Listens for 'upgrade' websocket events on the raw server
+		server
+	}
+);
 
 // ...some time later, push updates to subscribers:
-pubsub.publish("BOOKS_TOPIC", {
+pubsub.publish('BOOKS_TOPIC', {
 	title: 'The Doors of Stone',
-	author: 'Patrick Rothfuss',
+	author: 'Patrick Rothfuss'
 });
 ```
 
@@ -431,8 +569,8 @@ pubsub.publish("BOOKS_TOPIC", {
 ```json
 {
 	"scripts": {
-    "server": "cd server && node server.js"
-  }
+		"server": "cd server && node server.js"
+	}
 }
 ```
 
@@ -486,7 +624,7 @@ devDependencies:
 + houdini 1.0.7
 + houdini-svelte 1.0.7
 
-# start your application:     
+# start your application:
 $ pnpm dev
 
   VITE v4.1.4  ready in 2400 ms
@@ -548,8 +686,4 @@ $houdini
 
 ## Create SvelteKit +Layout.svelte
 
-
-
 ### Create Houdini client
-
-

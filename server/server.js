@@ -5,7 +5,7 @@ const { buildSchema, execute, subscribe } = require('graphql');
 const { PubSub } = require('graphql-subscriptions');
 const { SubscriptionServer } = require('subscriptions-transport-ws');
 // cors
-const cors = require('cors')
+const cors = require('cors');
 
 // Create a server:
 const app = express();
@@ -31,37 +31,42 @@ const pubsub = new PubSub();
 const rootValue = {
 	books: [
 		{
-			title: "Some non sense Title",
-			author: "Mário Monteiro",
+			title: 'Some non sense Title',
+			author: 'Mário Monteiro'
 		},
 		{
-			title: "Lost imagination",
-			author: "Alexandre Monteiro",
+			title: 'Lost imagination',
+			author: 'Alexandre Monteiro'
 		}
 	],
-	newBooks: () => pubsub.asyncIterator("BOOKS_TOPIC")
+	newBooks: () => pubsub.asyncIterator('BOOKS_TOPIC')
 };
 
 // enable cors
-app.use(cors())
+app.use(cors());
 
 // handle incoming HTTP requests as before:
-app.use(graphqlHTTP({
-	schema,
-	rootValue
-}));
+app.use(
+	graphqlHTTP({
+		schema,
+		rootValue
+	})
+);
 
 // start the server:
-const server = app.listen(8080, () => console.log("Server started on port 8080"));
+const server = app.listen(8080, () => console.log('Server started on port 8080'));
 
 // handle incoming websocket subscriptions too:
-SubscriptionServer.create({ schema, rootValue, execute, subscribe }, {
-	// Listens for 'upgrade' websocket events on the raw server
-	server
-});
+SubscriptionServer.create(
+	{ schema, rootValue, execute, subscribe },
+	{
+		// Listens for 'upgrade' websocket events on the raw server
+		server
+	}
+);
 
 // ...some time later, push updates to subscribers:
-pubsub.publish("BOOKS_TOPIC", {
+pubsub.publish('BOOKS_TOPIC', {
 	title: 'The Doors of Stone',
-	author: 'Patrick Rothfuss',
+	author: 'Patrick Rothfuss'
 });
