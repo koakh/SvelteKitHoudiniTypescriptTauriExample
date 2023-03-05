@@ -1,5 +1,30 @@
 # README
 
+- [README](#readme)
+	- [Install Rust](#install-rust)
+	- [Boostrap Tauri App](#boostrap-tauri-app)
+	- [Add Scripts to Package.json](#add-scripts-to-packagejson)
+	- [SvelteKit in SSG mode](#sveltekit-in-ssg-mode)
+	- [Create the Rust Project](#create-the-rust-project)
+	- [Test App](#test-app)
+	- [Git Init](#git-init)
+	- [Install Skeleton + Tailwind Css](#install-skeleton--tailwind-css)
+		- [Tailwind CSS](#tailwind-css)
+		- [Stylesheets](#stylesheets)
+		- [Themes](#themes)
+	- [Follow Skeleton Quickstart to add some Stuff to our App](#follow-skeleton-quickstart-to-add-some-stuff-to-our-app)
+	- [Commit Project](#commit-project)
+	- [Add Simple GraphQL Server](#add-simple-graphql-server)
+		- [Install dependencies](#install-dependencies)
+		- [Add Scripts to Package.json](#add-scripts-to-packagejson-1)
+		- [Run Server](#run-server)
+	- [Commit Project](#commit-project-1)
+	- [Setup Houdini](#setup-houdini)
+		- [Check Houdini Magic Dirs/Files](#check-houdini-magic-dirsfiles)
+	- [Create SvelteKit +Layout.svelte](#create-sveltekit-layoutsvelte)
+		- [Create Houdini client](#create-houdini-client)
+
+
 ## Install Rust
 
 - [rustup.rs - The Rust toolchain installer](https://rustup.rs/)
@@ -267,6 +292,34 @@ test skeleton and tailwind
 $ pnpm tauri
 ```
 
+## Follow Skeleton Quickstart to add some Stuff to our App
+
+- [Skeleton — UI Toolkit for Svelte + Tailwind](https://www.skeleton.dev/docs/quickstart)
+
+
+
+
+
+Problems? Open an issue on https://github.com/skeletonlabs/skeleton/issues if none exists already.
+
+✔ Add type checking with TypeScript? › Yes, using TypeScript syntax
+✔ Add ESLint for code linting? … No / Yes
+✔ Add Prettier for code formatting? … No / Yes
+✔ Add Playwright for browser testing? … No / Yes
+✔ Add Vitest for unit testing? … No / Yes
+✔ Enable Svelte-Kit experimental inspector http://bit.ly/3Hu0BGf ? … No / Yes
+✔ Pick tailwind plugins to add: › forms, typography, line-clamp
+✔ Select a theme: › Skeleton
+✔ Which Skeleton app template? › Skeleton Welcome
+
+> By selecting the `Welcome` template the project will come preconfigured with both an App Shell and App Bar components in `/src/routes/+layout.svelte`.
+
+
+
+
+
+
+
 ## Commit Project
 
 ```shell
@@ -493,4 +546,10 @@ $houdini
     └── src
 ```
 
-### Gener
+## Create SvelteKit +Layout.svelte
+
+
+
+### Create Houdini client
+
+
