@@ -25,7 +25,7 @@
 	- [Commit Project](#commit-project)
 	- [Add Simple GraphQL Server](#add-simple-graphql-server)
 		- [Install dependencies](#install-dependencies)
-		- [Add Scripts to Package.json](#add-scripts-to-packagejson-1)
+		- [Add Scripts to Root Package.json](#add-scripts-to-root-packagejson)
 		- [Run Server](#run-server)
 	- [Commit Project](#commit-project-1)
 	- [Setup Houdini](#setup-houdini)
@@ -560,6 +560,11 @@ create `server/package.json`
 
 ```json
 {
+	"name": "svelte-kit-houdini-typescript-tauri-server",
+	"version": "0.0.1",
+	"scripts": {
+		"server": "node server.js"
+	},
 	"dependencies": {
 		"cors": "^2.8.5",
 		"express": "^4.18.2",
@@ -654,7 +659,7 @@ pubsub.publish('BOOKS_TOPIC', {
 });
 ```
 
-### Add Scripts to Package.json
+### Add Scripts to Root Package.json
 
 ```json
 {
@@ -669,11 +674,11 @@ pubsub.publish('BOOKS_TOPIC', {
 in a new terminal run:
 
 ```shell
-$ pnpm server
+$ pnpm run server
 Server started on port 8080
 ```
 
-> leave server running, houdini require a running server to create runtime ate boot app, and to work with hot reload and graphql changes
+> leave server running, houdini require a running server to create runtime in boot, and to work with hot reload, and graphql changes to
 
 ## Commit Project
 

@@ -1,7 +1,6 @@
 {
 	"name": "svelte-kit-houdini-typescript-tauri-example",
 	"version": "0.0.1",
-	"private": true,
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
