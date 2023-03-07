@@ -21,6 +21,10 @@ const schema = buildSchema(`#graphql
 		books: [Book]
 	}
 
+  type Mutation {
+    createBook(title: String!, author: String!): Book!
+  }
+
 	# new: subscribe to all the latest books!
 	type Subscription {
 		newBooks: Book!

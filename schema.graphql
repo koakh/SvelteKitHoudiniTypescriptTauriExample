@@ -3,6 +3,10 @@ type Book {
   title: String!
 }
 
+type Mutation {
+  createBook(author: String!, title: String!): Book!
+}
+
 type Query {
   books: [Book]
 }

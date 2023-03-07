@@ -1,5 +1,5 @@
 <script>
-  // skeleton: Make sure each of these stylesheets are present and in the order shown.
+	// skeleton: Make sure each of these stylesheets are present and in the order shown.
 	// your selected Skeleton theme:
 	import '@skeletonlabs/skeleton/themes/theme-crimson.css';
 	// this contains the bulk of Skeletons required styles:
@@ -47,17 +47,17 @@
 		</AppBar>
 	</svelte:fragment>
 	<svelte:fragment slot="sidebarLeft">
-	<!-- Insert the list: -->
-	<nav class="list-nav">
-		<ul>
-			<li><a href="/">Home</a></li>
-			<li><a href="/queries">Queries</a></li>
-			<li><a href="/mutations">Mutations</a></li>
-			<li><a href="/subscriptions">Subscriptions</a></li>
-		</ul>
-	</nav>
-	<!-- --- -->
-</svelte:fragment>
+		<!-- Insert the list: -->
+		<nav class="list-nav">
+			<ul>
+				<li><a href="/">Home</a></li>
+				<li><a href="/queries">Queries</a></li>
+				<li><a href="/mutations">Mutations</a></li>
+				<li><a href="/subscriptions">Subscriptions</a></li>
+			</ul>
+		</nav>
+		<!-- --- -->
+	</svelte:fragment>
 	<!-- Page Route Content -->
 	<slot />
 </AppShell>

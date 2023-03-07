@@ -56,7 +56,7 @@
 			{
 				"fullscreen": false,
 				"height": 600,
-				"resizable": true,
+				"resizable": false,
 				"title": "sveltekit-houdini-typescript-tauri-example",
 				"width": 800
 			}

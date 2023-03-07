@@ -20,6 +20,7 @@
 	- [Add @tabler/icons-svelte](#add-tablericons-svelte)
 	- [Final +page.svelte](#final-pagesvelte)
 	- [Tweak Skeleton Css](#tweak-skeleton-css)
+	- [Add No Selection to Css](#add-no-selection-to-css)
 	- [Add LightSwitch](#add-lightswitch)
 	- [Add Sidebar Navigation Routes](#add-sidebar-navigation-routes)
 	- [Commit Project](#commit-project)
@@ -30,8 +31,7 @@
 	- [Commit Project](#commit-project-1)
 	- [Setup Houdini](#setup-houdini)
 		- [Check Houdini Magic Dirs/Files](#check-houdini-magic-dirsfiles)
-	- [Create SvelteKit +Layout.svelte](#create-sveltekit-layoutsvelte)
-		- [Create Houdini client](#create-houdini-client)
+		- [Create Queries Page](#create-queries-page)
 
 ## Install Rust
 
@@ -478,6 +478,27 @@ currently skeleton buttons and cards, have big rounded corners, let's tweak it i
 }
 ```
 
+## Add No Selection to Css
+
+to prevent user select text, add to bottom of `app.css`
+
+```css
+body {
+	/* iOS Safari */
+	-webkit-touch-callout: none;
+	/* Safari */
+	-webkit-user-select: none;
+	/* Konqueror HTML */
+	-khtml-user-select: none;
+	/* Firefox */
+	-moz-user-select: none;
+	/* Internet Explorer/Edge */
+	-ms-user-select: none;
+	/* Non-prefixed version, currently supported by Chrome and Opera */
+	user-select: none;
+}
+```
+
 ## Add LightSwitch
 
 add `LightSwitch` component to toggle from light to dark theme
@@ -607,6 +628,10 @@ const schema = buildSchema(`#graphql
 	type Query {
 		books: [Book]
 	}
+
+  type Mutation {
+    createBook(title: String!, author: String!): Book!
+  }
 
 	# new: subscribe to all the latest books!
 	type Subscription {
@@ -779,6 +804,56 @@ $houdini
     └── src
 ```
 
-## Create SvelteKit +Layout.svelte
+above `pnpm dlx houdini@latest init` command, makes some black magic on our app, creates client, types and many other good things
 
-### Create Houdini client
+### Create Queries Page
+
+to see how houdini simplify our lifes, let's populate our recent created page queries page
+
+`src/routes/queries/+page.svelte`
+
+```svelte
+<script lang="ts">
+	import type { PageData } from './$houdini';
+
+	export let data: PageData;
+
+	$: ({ Books } = data);
+	$: console.log(JSON.stringify($Books.data, undefined, 2));
+</script>
+
+<div class="container mx-auto p-8 space-y-8">
+	<section>
+		<h1 class="mb-5">Queries</h1>
+		<ul>
+			{#if $Books?.data?.books}
+				{#each $Books.data.books as book}
+					{#if book}
+						<li>title: {book.title} / author: {book.author}</li>
+					{/if}
+				{/each}
+			{/if}
+		</ul>
+	</section>
+</div>
+```
+
+add graphql query
+
+`src/routes/queries/+page.gql`
+
+```gql
+query Books {
+  books{
+    title
+    author
+  }
+}
+```
+
+with just that minimal changes we have a server side rendering page with a houdini query, without need to create a `+page.server.ts`, it simply works
+
+run app and check results in `http://localhost:5173/queries` page, we should see the query result
+
+- title: Some non sense Title / author: Mário Monteiro
+- title: Lost imagination / author: Alexandre Monteiro
