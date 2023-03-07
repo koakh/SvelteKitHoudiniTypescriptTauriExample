@@ -15,10 +15,12 @@
 	- [Follow Skeleton Quickstart to add some Stuff to our App](#follow-skeleton-quickstart-to-add-some-stuff-to-our-app)
 		- [add `AppShell` to `+layout.svelte`](#add-appshell-to-layoutsvelte)
 		- [Add Sidebar Navigation](#add-sidebar-navigation)
-		- [Page Setup](#page-setup)
+		- [Page Setup \& Add a Component](#page-setup--add-a-component)
 		- [Add a Component](#add-a-component)
 	- [Add @tabler/icons-svelte](#add-tablericons-svelte)
+	- [Final +page.svelte](#final-pagesvelte)
 	- [Tweak Skeleton Css](#tweak-skeleton-css)
+	- [Add LightSwitch](#add-lightswitch)
 	- [Commit Project](#commit-project)
 	- [Add Simple GraphQL Server](#add-simple-graphql-server)
 		- [Install dependencies](#install-dependencies)
@@ -326,7 +328,7 @@ $ pnpm dev
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
 				<a
-					class="btn btn-sm variant-ghost-surface"
+					class="btn btn-sm variant-filled-primary"
 					href="https://discord.gg/EXqV7W8MtY"
 					target="_blank"
 					rel="noreferrer"
@@ -334,7 +336,7 @@ $ pnpm dev
 					Discord
 				</a>
 				<a
-					class="btn btn-sm variant-ghost-surface"
+					class="btn btn-sm variant-filled-secondary"
 					href="https://twitter.com/SkeletonUI"
 					target="_blank"
 					rel="noreferrer"
@@ -342,7 +344,7 @@ $ pnpm dev
 					Twitter
 				</a>
 				<a
-					class="btn btn-sm variant-ghost-surface"
+					class="btn btn-sm variant-filled-tertiary"
 					href="https://github.com/skeletonlabs/skeleton"
 					target="_blank"
 					rel="noreferrer"
@@ -383,27 +385,27 @@ Next, let's implement a navigation list within the App Shell's left sidebar slot
 	<nav class="list-nav">
 		<ul>
 			<li><a href="/">Home</a></li>
-			<li><a href="/about">About</a></li>
+			<li><a href="/queries">Queries</a></li>
+			<li><a href="/mutations">Mutations</a></li>
+			<li><a href="/subscriptions">Subscriptions</a></li>
 		</ul>
 	</nav>
 	<!-- --- -->
 </svelte:fragment>
 ```
 
-### Page Setup
+> note: /queries, /mutations and /subscriptions routes will be configured in bellow sections
 
-Let's add some basic content to our homepage. Open `/src/routes/+page.svelte` and replace the contents with the following. This will **provide multiple elements automatically** styled by the all.css stylesheet in our root layout.
+### Page Setup & Add a Component
+
+Let's add some basic content to our homepage. Open `/src/routes/+page.svelte` and replace the contents with the following. This will **provide multiple elements automatically** styled by the `all.css` stylesheet in our root layout.
 
 ```svelte
-<script lang="ts">
-	import { IconHeart } from '@tabler/icons-svelte';
-</script>
-
 <div class="container mx-auto p-8 space-y-8">
 	<h1>Hello Skeleton</h1>
 	<p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
 		<p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-	<section>
+	</section>
 		<a class="btn variant-filled-primary" href="https://kit.svelte.dev/" target="_blank" rel="noreferrer">SvelteKit</a>
 		<a class="btn variant-filled-secondary" href="https://tailwindcss.com/" target="_blank" rel="noreferrer">Tailwind</a>
 		<a class="btn variant-filled-tertiary" href="https://github.com/" target="_blank" rel="noreferrer">GitHub</a>
@@ -417,7 +419,6 @@ Finally let's implement Skeleton's `Avatar` component. First, import the compone
 
 ```svelte
 		...
-		<a class="btn variant-filled-tertiary" href="https://github.com/" target="_blank" rel="noreferrer">GitHub</a>
 	</section>
   <Avatar src="https://i.pravatar.cc/" />
 </div>
@@ -425,16 +426,36 @@ Finally let's implement Skeleton's `Avatar` component. First, import the compone
 
 ## Add @tabler/icons-svelte
 
-add dependency with
+add `@tabler/icons-svelte` dependency
 
 ```shell
 $ pnpm add @tabler/icons-svelte
 ```
 
-add `<IconHeart size={48} stroke={1} />` tabler icon to `+page.svelte` to test setup
+add `<IconHeart size={48} stroke={1} />` tabler icon to `+page.svelte`
 
 ```svelte
-		...
+	...
+  <Avatar src="https://i.pravatar.cc/" />
+  <IconHeart size={48} stroke={1} />
+</div>
+```
+
+## Final +page.svelte
+
+```svelte
+<script lang="ts">
+  import { Avatar } from '@skeletonlabs/skeleton';
+	import { IconHeart } from '@tabler/icons-svelte';
+</script>
+
+<div class="container mx-auto p-8 space-y-8">
+	<h1>Hello Skeleton</h1>
+	<p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+	<p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+	<section>
+		<a class="btn variant-filled-primary" href="https://kit.svelte.dev/" target="_blank" rel="noreferrer">SvelteKit</a>
+		<a class="btn variant-filled-secondary" href="https://tailwindcss.com/" target="_blank" rel="noreferrer">Tailwind</a>
 		<a class="btn variant-filled-tertiary" href="https://github.com/" target="_blank" rel="noreferrer">GitHub</a>
 	</section>
   <Avatar src="https://i.pravatar.cc/" />
@@ -444,7 +465,7 @@ add `<IconHeart size={48} stroke={1} />` tabler icon to `+page.svelte` to test s
 
 ## Tweak Skeleton Css
 
-style rounded container and base
+currently skeleton buttons and cards, have big rounded corners, let's tweak it in our `app.css`  to have small rounded corners, and to test skeleton styles override
 
 `src/app.css`
 
@@ -455,6 +476,27 @@ style rounded container and base
   --theme-rounded-base: theme(borderRadius.md);
 }
 ```
+
+## Add LightSwitch
+
+add `LightSwitch` component to toggle from light to dark theme
+
+`src/routes/+layout.svelte`
+
+```svelte
+...
+import { LightSwitch } from '@skeletonlabs/skeleton';
+...
+					GitHub
+				</a>
+				<LightSwitch />
+			</svelte:fragment>
+		</AppBar>
+	</svelte:fragment>
+	<svelte:fragment slot="sidebarLeft">
+```
+
+now we have one `<Avatar />`, one <LightSwitch /> and one `<IconHeart />` test components, to assert that everything is working
 
 ## Commit Project
 
