@@ -501,7 +501,47 @@ now we have one `<Avatar />`, one <LightSwitch /> and one `<IconHeart />` test c
 
 ## Add Sidebar Navigation Routes
 
+create bellow pages to be used with houdini demo
 
+`src/routes/queries/+page.svelte`
+
+```svelte
+<script lang="ts">
+</script>
+
+<div class="container mx-auto p-8 space-y-8">
+	<section>
+    <h1>Queries</h1>
+		<p>page stub</p>
+	</section>
+</div>
+```
+
+`src/routes/mutations/+page.svelte`
+
+```svelte
+<script lang="ts">
+</script>
+
+<div class="container mx-auto p-8 space-y-8">
+	<section>
+    <h1>Mutations</h1>
+		<p>page stub</p>
+	</section>
+</div>
+```
+
+`src/routes/subscriptions/+page.svelte`
+
+<script lang="ts">
+</script>
+
+<div class="container mx-auto p-8 space-y-8">
+	<section>
+    <h1>Subscriptions</h1>
+		<p>page stub</p>
+	</section>
+</div>
 
 ## Commit Project
 
