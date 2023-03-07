@@ -21,6 +21,7 @@
 	- [Final +page.svelte](#final-pagesvelte)
 	- [Tweak Skeleton Css](#tweak-skeleton-css)
 	- [Add LightSwitch](#add-lightswitch)
+	- [Add Sidebar Navigation Routes](#add-sidebar-navigation-routes)
 	- [Commit Project](#commit-project)
 	- [Add Simple GraphQL Server](#add-simple-graphql-server)
 		- [Install dependencies](#install-dependencies)
@@ -497,6 +498,10 @@ import { LightSwitch } from '@skeletonlabs/skeleton';
 ```
 
 now we have one `<Avatar />`, one <LightSwitch /> and one `<IconHeart />` test components, to assert that everything is working
+
+## Add Sidebar Navigation Routes
+
+
 
 ## Commit Project
 
