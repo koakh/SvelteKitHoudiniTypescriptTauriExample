@@ -1,6 +1,7 @@
 {
 	"name": "svelte-kit-houdini-typescript-tauri-server",
 	"version": "0.0.1",
+	"type": "module",
 	"scripts": {
 		"server": "node server.js"
 	},

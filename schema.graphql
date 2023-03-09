@@ -8,7 +8,7 @@ type Mutation {
 }
 
 type Query {
-  books: [Book]
+  books: [Book!]!
 }
 
 type Subscription {

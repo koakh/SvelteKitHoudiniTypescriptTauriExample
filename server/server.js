@@ -1,30 +1,40 @@
-const express = require('express');
-const { graphqlHTTP } = require('express-graphql');
-const { buildSchema, execute, subscribe } = require('graphql');
-// Pull in some specific Apollo packages:
-const { PubSub } = require('graphql-subscriptions');
-const { SubscriptionServer } = require('subscriptions-transport-ws');
+import express from 'express';
+import { graphqlHTTP } from 'express-graphql';
+import { buildSchema, execute, subscribe } from 'graphql';
+// pull in some specific Apollo packages:
+import { PubSub } from 'graphql-subscriptions';
+import { SubscriptionServer } from 'subscriptions-transport-ws';
 // cors
-const cors = require('cors');
+import cors from 'cors';
 
-// Create a server:
+// resolvers
+const books = [{
+	title: 'Some non sense Title',
+	author: 'Mário Monteiro'
+}, {
+	title: 'Lost imagination',
+	author: 'Alexandre Monteiro'
+}];
+const createBook = (value) => {
+	books.push(value);
+	return value;
+}
+
+// create a server:
 const app = express();
 
-// Create a schema and a root resolver:
+// create a schema and a root resolver:
 const schema = buildSchema(`#graphql
 	type Book {
 		title: String!
 		author: String!
 	}
-
 	type Query {
-		books: [Book]
+		books: [Book!]!
 	}
-
   type Mutation {
     createBook(title: String!, author: String!): Book!
   }
-
 	# new: subscribe to all the latest books!
 	type Subscription {
 		newBooks: Book!
@@ -32,17 +42,10 @@ const schema = buildSchema(`#graphql
 `);
 
 const pubsub = new PubSub();
+
 const rootValue = {
-	books: [
-		{
-			title: 'Some non sense Title',
-			author: 'Mário Monteiro'
-		},
-		{
-			title: 'Lost imagination',
-			author: 'Alexandre Monteiro'
-		}
-	],
+	books,
+	createBook,
 	newBooks: () => pubsub.asyncIterator('BOOKS_TOPIC')
 };
 
@@ -53,12 +56,12 @@ app.use(cors());
 app.use(
 	graphqlHTTP({
 		schema,
-		rootValue
+		rootValue,
 	})
 );
 
 // start the server:
-const server = app.listen(8080, () => console.log('Server started on port 8080'));
+const server = app.listen(8080, () => console.log('server started on port 8080'));
 
 // handle incoming websocket subscriptions too:
 SubscriptionServer.create(
@@ -69,8 +72,10 @@ SubscriptionServer.create(
 	}
 );
 
-// ...some time later, push updates to subscribers:
-pubsub.publish('BOOKS_TOPIC', {
-	title: 'The Doors of Stone',
-	author: 'Patrick Rothfuss'
-});
+// 5sec time later, push updates to subscribers:
+setInterval(() => {
+	pubsub.publish('BOOKS_TOPIC', {
+		title: 'Dreamers Flight',
+		author: 'Jorge Monteiro'
+	});
+}, 5000);
