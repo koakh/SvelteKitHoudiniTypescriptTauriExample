@@ -10,6 +10,8 @@
 <div class="container mx-auto p-8 space-y-8">
 	<section>
 		<h1 class="mb-5">Queries</h1>
+	</section>
+	<main>
 		<ul>
 			{#if $Books?.data?.books}
 				{#each $Books.data.books as book}
@@ -19,5 +21,5 @@
 				{/each}
 			{/if}
 		</ul>
-	</section>
+	</main>
 </div>

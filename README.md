@@ -24,7 +24,7 @@
 	- [Add LightSwitch](#add-lightswitch)
 	- [Add Sidebar Navigation Routes](#add-sidebar-navigation-routes)
 	- [Commit Project](#commit-project)
-	- [Add Simple GraphQL Server](#add-simple-graphql-server)
+	- [Add Minimal GraphQL Server](#add-minimal-graphql-server)
 		- [Install dependencies](#install-dependencies)
 		- [Add Scripts to Root Package.json](#add-scripts-to-root-packagejson)
 		- [Run Server](#run-server)
@@ -32,6 +32,8 @@
 	- [Setup Houdini](#setup-houdini)
 		- [Check Houdini Magic Dirs/Files](#check-houdini-magic-dirsfiles)
 		- [Create Queries Page](#create-queries-page)
+		- [Create Mutations Page](#create-mutations-page)
+		- [Create Subscriptions Page](#create-subscriptions-page)
 
 ## Install Rust
 
@@ -571,7 +573,7 @@ $ git add .
 $ git commit -am "before add graphql server"
 ```
 
-## Add Simple GraphQL Server
+## Add Minimal GraphQL Server
 
 ```shell
 $ mkdir server
@@ -583,6 +585,7 @@ create `server/package.json`
 {
 	"name": "svelte-kit-houdini-typescript-tauri-server",
 	"version": "0.0.1",
+	"type": "module",
 	"scripts": {
 		"server": "node server.js"
 	},
@@ -606,33 +609,43 @@ $ cd server && pnpm i && cd ..
 create `server/server.js`
 
 ```js
-const express = require('express');
-const { graphqlHTTP } = require('express-graphql');
-const { buildSchema, execute, subscribe } = require('graphql');
-// Pull in some specific Apollo packages:
-const { PubSub } = require('graphql-subscriptions');
-const { SubscriptionServer } = require('subscriptions-transport-ws');
+import express from 'express';
+import { graphqlHTTP } from 'express-graphql';
+import { buildSchema, execute, subscribe } from 'graphql';
+// pull in some specific Apollo packages:
+import { PubSub } from 'graphql-subscriptions';
+import { SubscriptionServer } from 'subscriptions-transport-ws';
 // cors
-const cors = require('cors');
+import cors from 'cors';
 
-// Create a server:
+// resolvers
+const books = [{
+	title: 'Some non sense Title',
+	author: 'Mário Monteiro'
+}, {
+	title: 'Lost imagination',
+	author: 'Alexandre Monteiro'
+}];
+const createBook = (value) => {
+	books.push(value);
+	return value;
+}
+
+// create a server:
 const app = express();
 
-// Create a schema and a root resolver:
+// create a schema and a root resolver:
 const schema = buildSchema(`#graphql
 	type Book {
 		title: String!
 		author: String!
 	}
-
 	type Query {
-		books: [Book]
+		books: [Book!]!
 	}
-
   type Mutation {
     createBook(title: String!, author: String!): Book!
   }
-
 	# new: subscribe to all the latest books!
 	type Subscription {
 		newBooks: Book!
@@ -640,17 +653,10 @@ const schema = buildSchema(`#graphql
 `);
 
 const pubsub = new PubSub();
+
 const rootValue = {
-	books: [
-		{
-			title: 'Some non sense Title',
-			author: 'Mário Monteiro'
-		},
-		{
-			title: 'Lost imagination',
-			author: 'Alexandre Monteiro'
-		}
-	],
+	books,
+	createBook,
 	newBooks: () => pubsub.asyncIterator('BOOKS_TOPIC')
 };
 
@@ -661,12 +667,12 @@ app.use(cors());
 app.use(
 	graphqlHTTP({
 		schema,
-		rootValue
+		rootValue,
 	})
 );
 
 // start the server:
-const server = app.listen(8080, () => console.log('Server started on port 8080'));
+const server = app.listen(8080, () => console.log('server started on port 8080'));
 
 // handle incoming websocket subscriptions too:
 SubscriptionServer.create(
@@ -677,11 +683,13 @@ SubscriptionServer.create(
 	}
 );
 
-// ...some time later, push updates to subscribers:
-pubsub.publish('BOOKS_TOPIC', {
-	title: 'The Doors of Stone',
-	author: 'Patrick Rothfuss'
-});
+// 5sec time later, push updates to subscribers:
+setInterval(() => {
+	pubsub.publish('BOOKS_TOPIC', {
+		title: 'Dreamers Flight',
+		author: 'Jorge Monteiro'
+	});
+}, 5000);
 ```
 
 ### Add Scripts to Root Package.json
@@ -808,7 +816,7 @@ above `pnpm dlx houdini@latest init` command, makes some black magic on our app,
 
 ### Create Queries Page
 
-to see how houdini simplify our lifes, let's populate our recent created page queries page
+to see how houdini simplify our lifes, let's populate our recent created pages
 
 `src/routes/queries/+page.svelte`
 
@@ -819,12 +827,14 @@ to see how houdini simplify our lifes, let's populate our recent created page qu
 	export let data: PageData;
 
 	$: ({ Books } = data);
-	$: console.log(JSON.stringify($Books.data, undefined, 2));
+	// $: console.log(JSON.stringify($Books.data, undefined, 2));
 </script>
 
 <div class="container mx-auto p-8 space-y-8">
 	<section>
 		<h1 class="mb-5">Queries</h1>
+	</section>
+	<main>
 		<ul>
 			{#if $Books?.data?.books}
 				{#each $Books.data.books as book}
@@ -834,7 +844,7 @@ to see how houdini simplify our lifes, let's populate our recent created page qu
 				{/each}
 			{/if}
 		</ul>
-	</section>
+	</main>
 </div>
 ```
 
@@ -851,9 +861,92 @@ query Books {
 }
 ```
 
-with just that minimal changes we have a server side rendering page with a houdini query, without need to create a `+page.server.ts`, it simply works
+with that minimal changes, we have a **server side rendering page** with a houdini query, 
+without need to create a `+page.server.ts`, it simply works
 
 run app and check results in `http://localhost:5173/queries` page, we should see the query result
 
 - title: Some non sense Title / author: Mário Monteiro
 - title: Lost imagination / author: Alexandre Monteiro
+
+### Create Mutations Page
+
+add `faker` dependency
+
+```shell
+$ pnpm add @faker-js/faker
+```
+
+now create mutation `+page.svelte`
+
+`src/routes/mutations/+page.svelte`
+
+```svelte
+<script lang="ts">
+	import { graphql } from '$houdini';
+	import { faker } from '@faker-js/faker';
+
+	const createBook = graphql(`
+		mutation CreateBook($title: String!, $author: String!) {
+			createBook(title: $title, author: $author) {
+				title
+				author
+			}
+		}
+	`);
+</script>
+
+<div class="container mx-auto p-8 space-y-8">
+	<section>
+		<h1>Mutations</h1>
+	</section>
+	<main>
+		<button
+			class="btn btn-sm variant-filled-primary"
+			on:click={() =>
+				createBook.mutate({
+					title: faker.word.adjective(2),
+					author: faker.word.adjective(2)
+				})}>Create Book</button
+		>
+	</main>
+</div>
+```
+
+### Create Subscriptions Page
+
+change `src/client.ts`
+
+```ts
+import { HoudiniClient, subscription } from '$houdini';
+
+function sseSockets() {
+  return {
+    subscribe(payload, handlers) {
+      const url = new URL('/graphql', 'http://localhost:8080');
+      url.searchParams.append('query', payload.query);
+      url.searchParams.append('variables', JSON.stringify(payload.variables));
+
+      const eventSource = new EventSource(url);
+			console.log(`connect to ${url}`);
+
+      eventSource.addEventListener('message', (ev) => handlers.next(JSON.parse(ev.data)));
+
+      return () => eventSource.close();
+    },
+  }
+}
+
+export default new HoudiniClient({
+  url: "http://localhost:8080/graphql",
+  plugins: [
+    subscription(sseSockets)
+  ]
+})
+```
+
+create subscriptions `+page.svelte`
+
+`src/routes/subscriptions/+page.svelte`
+
+

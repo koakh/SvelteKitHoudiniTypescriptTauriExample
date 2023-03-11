@@ -1,15 +1,26 @@
-import { HoudiniClient, type RequestHandler } from '$houdini';
+import { HoudiniClient, subscription } from '$houdini';
+
+function sseSockets() {
+  return {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    subscribe(payload: any, handlers: any) {
+      const url = new URL('/graphql', 'http://localhost:8080');
+      url.searchParams.append('query', payload.query);
+      url.searchParams.append('variables', JSON.stringify(payload.variables));
+
+      const eventSource = new EventSource(url);
+			console.log(`connect to ${url}`);
+
+      eventSource.addEventListener('message', (ev) => handlers.next(JSON.parse(ev.data)));
+
+      return () => eventSource.close();
+    },
+  }
+}
 
 export default new HoudiniClient({
-	url: 'http://localhost:8080/graphql'
-
-	// uncomment this to configure the network call (for things like authentication)
-	// for more information, please visit here: https://www.houdinigraphql.com/guides/authentication
-	// fetchParams({ session }) {
-	//     return {
-	//         headers: {
-	//             Authentication: `Bearer ${session.token}`,
-	//         }
-	//     }
-	// }
-});
+  url: "http://localhost:8080/graphql",
+  plugins: [
+    subscription(sseSockets)
+  ]
+})
