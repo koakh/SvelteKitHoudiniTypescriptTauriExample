@@ -1,0 +1,86 @@
+@host = 127.0.0.1
+@port = 5001
+@baseUri = http://{{host}}:{{port}}
+@gqlUri = {{baseUri}}/graphql
+@contentType = application/json
+@requestType = GraphQL
+
+### queryBooks
+// @name queryBooks
+
+POST {{gqlUri}} HTTP/1.1
+Content-Type: {{contentType}}
+X-REQUEST-TYPE: {{requestType}}
+
+query Books {
+  books{
+    title
+    author
+  }
+}
+
+### mutationCreateBook
+// @name mutationCreateBook
+
+POST {{gqlUri}} HTTP/1.1
+Content-Type: {{contentType}}
+X-REQUEST-TYPE: {{requestType}}
+
+mutation CreateBook($title: String!, $author: String!) {
+  createBook(title: $title, author: $author) {
+    title
+    author
+  }
+}
+
+{
+  "title": "Koakh World",
+  "author": "Madness"
+}
+
+### mutationBroadcastRandomNumber
+// @name mutationBroadcastRandomNumber
+
+POST {{gqlUri}} HTTP/1.1
+Content-Type: {{contentType}}
+X-REQUEST-TYPE: {{requestType}}
+
+mutation BroadcastRandomNumber {
+  broadcastRandomNumber
+}
+
+### subscriptionCountdown
+// @name subscriptionCountdown
+
+POST {{gqlUri}} HTTP/1.1
+Content-Type: {{contentType}}
+X-REQUEST-TYPE: {{requestType}}
+
+subscription Countdown {
+  countdown(from: 999)
+}
+
+### subscriptionRandomNumber
+// @name subscriptionRandomNumber
+
+POST {{gqlUri}} HTTP/1.1
+Content-Type: {{contentType}}
+X-REQUEST-TYPE: {{requestType}}
+
+subscription RandomNumber {
+  randomNumber
+}
+
+### subscriptionNewBooks
+// @name subscriptionNewBooks
+
+POST {{gqlUri}} HTTP/1.1
+Content-Type: {{contentType}}
+X-REQUEST-TYPE: {{requestType}}
+
+subscription NewBooks{
+  newBooks{
+    title
+    author
+  }
+}

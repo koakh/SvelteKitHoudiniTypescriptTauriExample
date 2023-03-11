@@ -4,6 +4,7 @@ type Book {
 }
 
 type Mutation {
+  broadcastRandomNumber: Float!
   createBook(author: String!, title: String!): Book!
 }
 
@@ -12,5 +13,7 @@ type Query {
 }
 
 type Subscription {
+  countdown(from: Int!): Int!
   newBooks: Book!
+  randomNumber: Float!
 }

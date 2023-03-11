@@ -672,7 +672,7 @@ app.use(
 );
 
 // start the server:
-const server = app.listen(8080, () => console.log('server started on port 8080'));
+const server = app.listen(5001, () => console.log('server started on port 5001'));
 
 // handle incoming websocket subscriptions too:
 SubscriptionServer.create(
@@ -708,7 +708,7 @@ in a new terminal run:
 
 ```shell
 $ pnpm run server
-Server started on port 8080
+Server started on port 5001
 ```
 
 > leave server running, houdini require a running server to create runtime in boot, and to work with hot reload, and graphql changes to
@@ -724,13 +724,13 @@ $ git commit -am "before setup houdini"
 
 - [Houdini - Setting Up Your Project](https://www.houdinigraphql.com/guides/setting-up-your-project)
 
-use running graphql server url `http://localhost:8080/graphql`
+use running graphql server url `http://localhost:5001/graphql`
 
 ```shell
 $ pnpm dlx houdini@latest init
 
 ✔ Will you use a remote GraphQL API? … yes
-✔ What's the URL for your api? … http://localhost:8080/graphql
+✔ What's the URL for your api? … http://localhost:5001/graphql
 
 🔎 Here's what we found:
 ✨ SvelteKit
@@ -923,7 +923,7 @@ import { HoudiniClient, subscription } from '$houdini';
 function sseSockets() {
   return {
     subscribe(payload, handlers) {
-      const url = new URL('/graphql', 'http://localhost:8080');
+      const url = new URL('/graphql', 'http://localhost:5001');
       url.searchParams.append('query', payload.query);
       url.searchParams.append('variables', JSON.stringify(payload.variables));
 
@@ -938,7 +938,7 @@ function sseSockets() {
 }
 
 export default new HoudiniClient({
-  url: "http://localhost:8080/graphql",
+  url: "http://localhost:5001/graphql",
   plugins: [
     subscription(sseSockets)
   ]

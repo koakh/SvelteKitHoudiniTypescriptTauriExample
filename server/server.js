@@ -61,7 +61,7 @@ app.use(
 );
 
 // start the server:
-const server = app.listen(8080, () => console.log('server started on port 8080'));
+const server = app.listen(5001, () => console.log('server started on port 5001'));
 
 // handle incoming websocket subscriptions too:
 SubscriptionServer.create(
@@ -72,7 +72,7 @@ SubscriptionServer.create(
 	}
 );
 
-// 5sec time later, push updates to subscribers:
+// 5sec some time later, push updates to subscribers:
 setInterval(() => {
 	pubsub.publish('BOOKS_TOPIC', {
 		title: 'Dreamers Flight',

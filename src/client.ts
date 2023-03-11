@@ -4,7 +4,7 @@ function sseSockets() {
   return {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     subscribe(payload: any, handlers: any) {
-      const url = new URL('/graphql', 'http://localhost:8080');
+      const url = new URL('/graphql', 'http://localhost:5001');
       url.searchParams.append('query', payload.query);
       url.searchParams.append('variables', JSON.stringify(payload.variables));
 
@@ -19,8 +19,8 @@ function sseSockets() {
 }
 
 export default new HoudiniClient({
-  url: "http://localhost:8080/graphql",
+  url: "http://localhost:5001/graphql",
   plugins: [
-    subscription(sseSockets)
+    subscription(sseSockets),
   ]
 })
