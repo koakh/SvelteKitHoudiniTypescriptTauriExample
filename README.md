@@ -31,6 +31,7 @@
 	- [Commit Project](#commit-project-1)
 	- [Setup Houdini](#setup-houdini)
 		- [Check Houdini Magic Dirs/Files](#check-houdini-magic-dirsfiles)
+		- [Tweak Houdini Config](#tweak-houdini-config)
 		- [Create Queries Page](#create-queries-page)
 		- [Create Mutations Page](#create-mutations-page)
 		- [Create Subscriptions Page](#create-subscriptions-page)
@@ -812,7 +813,30 @@ $houdini
     └── src
 ```
 
-above `pnpm dlx houdini@latest init` command, makes some black magic on our app, creates client, types and many other good things
+above `pnpm dlx houdini@latest init` command, makes some **black magic** on our app, creates client, houdini config, types and many other good things
+
+### Tweak Houdini Config
+
+we opted to don't use cache, for this we add `defaultCachePolicy: 'NetworkOnly'` to config, to define `defaultCachePolicy` globally to whole project
+
+```js
+/// <references types="houdini-svelte">
+
+/// docs https://houdinigraphql.com/api/config
+
+/** @type {import('houdini').ConfigFile} */
+const config = {
+	watchSchema: {
+		url: 'http://localhost:5001/graphql'
+	},
+	plugins: {
+		'houdini-svelte': {}
+	},
+	defaultCachePolicy: 'NetworkOnly',
+};
+
+export default config;
+```
 
 ### Create Queries Page
 

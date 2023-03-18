@@ -1,11 +1,25 @@
 type Book {
   author: String!
+  description: String!
+  id: ID!
+  image: String!
+  price: Float!
+  title: String!
+}
+
+input BookInput {
+  author: String!
+  description: String!
+  image: String!
+  price: Float!
   title: String!
 }
 
 type Mutation {
   broadcastRandomNumber: Float!
-  createBook(author: String!, title: String!): Book!
+  createBook(input: BookInput!): Book!
+  deleteBook(id: ID!): Book!
+  updateBook(id: ID!, input: BookInput!): Book!
 }
 
 type Query {
@@ -14,6 +28,8 @@ type Query {
 
 type Subscription {
   countdown(from: Int!): Int!
+  deletedBooks: Book!
   newBooks: Book!
   randomNumber: Float!
+  updatedBooks: Book!
 }

@@ -14,8 +14,12 @@ X-REQUEST-TYPE: {{requestType}}
 
 query Books {
   books{
+    id
     title
     author
+    image
+    description
+    price
   }
 }
 
@@ -26,16 +30,76 @@ POST {{gqlUri}} HTTP/1.1
 Content-Type: {{contentType}}
 X-REQUEST-TYPE: {{requestType}}
 
-mutation CreateBook($title: String!, $author: String!) {
-  createBook(title: $title, author: $author) {
+mutation CreateBook($input: BookInput!) {
+  createBook(input: $input) {
+    id
     title
     author
+    image
+    description
+    price
   }
 }
 
 {
-  "title": "Koakh World",
-  "author": "Madness"
+  "input": {
+    "title": "Koakh World",
+    "author": "Madness",
+    "image": "https://loremflickr.com/640/360",
+    "description": "Curabitur vel lobortis nunc, at accumsan diam. Nullam in nulla tristique, tincidunt eros pellentesque, faucibus libero. Integer eget fermentum mauris. Quisque eu scelerisque orci, non posuere enim. Sed ornare interdum nunc a porta. Etiam vehicula scelerisque consectetur. Integer semper ante vitae egestas maximus...",
+    "price": 7.14
+  }
+}
+
+### mutationUpdateBook
+// @name mutationUpdateBook
+
+POST {{gqlUri}} HTTP/1.1
+Content-Type: {{contentType}}
+X-REQUEST-TYPE: {{requestType}}
+
+mutation UpdateBook($id: ID!, $input: BookInput!) {
+  updateBook(id: $id, input: $input) {
+    id
+    title
+    author
+    image
+    description
+    price
+  }
+}
+
+{
+  "id": 3,
+  "input": {
+    "title": "Koakh World*",
+    "author": "Madness*",
+    "image": "https://loremflickr.com/640/360",
+    "description": "Curabitur vel lobortis nunc...*",
+    "price": 14.28
+  }
+}
+
+### mutationDeleteBook
+// @name mutationDeleteBook
+
+POST {{gqlUri}} HTTP/1.1
+Content-Type: {{contentType}}
+X-REQUEST-TYPE: {{requestType}}
+
+mutation DeleteBook($id: ID!) {
+  deleteBook(id: $id) {
+    id
+    title
+    author
+    image
+    description
+    price
+  }
+}
+
+{
+  "id": 3
 }
 
 ### mutationBroadcastRandomNumber

@@ -1,6 +1,11 @@
 Project:
   ☐ debug frontend
   ☐ debug backend
-  ☐ simple yoga sse server with moked data
-  ☐ tailwind and skeleton
-  ☐ 
+  ✔ simple yoga sse server with moked data @done(23-03-18 19:30)
+  ✔ tailwind and skeleton @done(23-03-18 19:30)
+  ☐ add price, description and image
+  ☐ jwt authentication, maybe oauth2 auth.js
+  ☐ @critical add delete mutation
+  ☐ Fix: MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 close listeners added to [Server]. Use emitter.setMaxListeners() to increase limit
+    https://stackoverflow.com/questions/43752073/graphql-subscriptions-max-listeners-exceeded-warning
+  ☐ @critical improve error handling, ex book not found

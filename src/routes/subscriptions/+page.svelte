@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { graphql } from '$houdini';
+	import { graphql, cache } from '$houdini';
 
 	// will start listening onMount (browser only)
 	const updates = graphql(`
-		subscription NewBooks{
-				newBooks{
+		subscription NewBooks {
+			newBooks {
 				title
 				author
 			}
@@ -13,6 +13,27 @@
 
 	$: updates.listen();
 	$: console.log(`$updates.data: [${JSON.stringify($updates.data)}]`);
+	// mutate cache with received update, this will replace whole cache
+	// $: {
+	// 	cache.write({
+	// 		query: graphql(`
+	// 			query AllBooksUpdate {
+	// 				books {
+	// 					title
+	// 					author
+	// 				}
+	// 			}
+	// 		`),
+	// 		data: {
+	// 			books: [
+	// 				{
+	// 					title: $updates?.data?.newBooks?.title || '',
+	// 					author: $updates?.data?.newBooks?.author || ''
+	// 				}
+	// 			]
+	// 		}
+	// 	});
+	// }
 </script>
 
 <div class="container mx-auto p-8 space-y-8">
