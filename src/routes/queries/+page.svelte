@@ -1,11 +1,13 @@
 <script lang="ts">
 	import type { PageData } from './$houdini';
 	import { cache, graphql } from '$houdini';
+	import { BookCard } from '../../components';
 
 	export let data: PageData;
 
 	$: ({ Books } = data);
-	// $: console.log(JSON.stringify($Books.data, undefined, 2));
+	$: console.log(JSON.stringify($Books.data, undefined, 2));
+
 	const allBooks = cache.read({
 		query: graphql(`
 			query AllBooksCache {
@@ -17,7 +19,7 @@
 		`)
 	});
 
-	console.log(`allBooks: [${JSON.stringify(allBooks, undefined, 2)}]`);
+	// console.log(`allBooks: [${JSON.stringify(allBooks, undefined, 2)}]`);
 	// const allBooks = cache.list('All_Books')
 	// const userFriends = cache.list('User_Friends', { parentID: '1' })
 	// const allFriends = cache.list('User_Friends', { allLists: true })
@@ -29,14 +31,14 @@
 		<h1 class="mb-5">Queries</h1>
 	</section>
 	<main>
-		<ul>
+		<div class="grid sm:gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
 			{#if $Books?.data?.books}
 				{#each $Books.data.books as book}
 					{#if book}
-						<li>title: {book.title} / author: {book.author}</li>
+						<BookCard {book} />
 					{/if}
 				{/each}
 			{/if}
-		</ul>
+		</div>
 	</main>
 </div>
