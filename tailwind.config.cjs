@@ -4,7 +4,8 @@ const config = {
 	content: [
 		'./src/**/*.{html,js,svelte,ts}',
 		// append the path for the Skeleton NPM package and files:
-		require('path').join(require.resolve('@skeletonlabs/skeleton'), '../**/*.{html,js,svelte,ts}')
+		require('path').join(require.resolve('@skeletonlabs/skeleton'),
+			'../**/*.{html,js,svelte,ts}')
 	],
 	theme: {
 		extend: {}

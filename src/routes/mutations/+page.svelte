@@ -78,7 +78,7 @@
 			class="btn btn-sm variant-filled-primary"
 			on:click={() =>
 				deleteBook.mutate({
-					id: '3',
+					id: '3'
 				})}>Delete Book</button
 		>
 	</main>

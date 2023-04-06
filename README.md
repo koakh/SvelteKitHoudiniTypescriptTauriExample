@@ -8,32 +8,28 @@
 	- [Create the Rust Project](#create-the-rust-project)
 	- [Test App](#test-app)
 	- [Git Init](#git-init)
-	- [Install Skeleton + Tailwind Css](#install-skeleton--tailwind-css)
+	- [Install Skeleton + Tailwind Css + Theme + Skeleton QuickStart](#install-skeleton--tailwind-css--theme--skeleton-quickstart)
 		- [Tailwind CSS](#tailwind-css)
 		- [Stylesheets](#stylesheets)
 		- [Themes](#themes)
-	- [Follow Skeleton Quickstart to add some Stuff to our App](#follow-skeleton-quickstart-to-add-some-stuff-to-our-app)
-		- [add `AppShell` to `+layout.svelte`](#add-appshell-to-layoutsvelte)
-		- [Add Sidebar Navigation](#add-sidebar-navigation)
-		- [Page Setup \& Add a Component](#page-setup--add-a-component)
-		- [Add a Component](#add-a-component)
-	- [Add @tabler/icons-svelte](#add-tablericons-svelte)
-	- [Final +page.svelte](#final-pagesvelte)
+		- [Follow Skeleton Quickstart to add some Stuff to our App](#follow-skeleton-quickstart-to-add-some-stuff-to-our-app)
+			- [add `AppShell` to `+layout.svelte`](#add-appshell-to-layoutsvelte)
+			- [Add Sidebar Navigation](#add-sidebar-navigation)
+			- [Layout Page Setup and Add a Component](#layout-page-setup-and-add-a-component)
+			- [Add a Component to HomePage](#add-a-component-to-homepage)
+	- [Add @tabler/icons-svelte and Add a Test Icon to HomePage](#add-tablericons-svelte-and-add-a-test-icon-to-homepage)
+	- [Final HomePage +page.svelte](#final-homepage-pagesvelte)
 	- [Tweak Skeleton Css](#tweak-skeleton-css)
 	- [Add No Selection to Css](#add-no-selection-to-css)
-	- [Add LightSwitch](#add-lightswitch)
+	- [Add LightSwitch to Layout +layout.svelte](#add-lightswitch-to-layout-layoutsvelte)
 	- [Add Sidebar Navigation Routes](#add-sidebar-navigation-routes)
 	- [Commit Project](#commit-project)
-	- [Add Minimal GraphQL Server](#add-minimal-graphql-server)
-		- [Install dependencies](#install-dependencies)
-		- [Add Scripts to Root Package.json](#add-scripts-to-root-packagejson)
-		- [Run Server](#run-server)
-	- [Commit Project](#commit-project-1)
+	- [Start InMemory Minimal GraphQL Server with SSE](#start-inmemory-minimal-graphql-server-with-sse)
 	- [Setup Houdini](#setup-houdini)
 		- [Check Houdini Magic Dirs/Files](#check-houdini-magic-dirsfiles)
 		- [Tweak Houdini Config](#tweak-houdini-config)
 		- [Create Queries Page](#create-queries-page)
-		- [Create Mutations Page](#create-mutations-page)
+		- [Add Faker and Create Mutations Page](#add-faker-and-create-mutations-page)
 		- [Create Subscriptions Page](#create-subscriptions-page)
 
 ## Install Rust
@@ -193,7 +189,7 @@ $ git add .
 $ git commit -am "first commit"
 ```
 
-## Install Skeleton + Tailwind Css
+## Install Skeleton + Tailwind Css + Theme + Skeleton QuickStart
 
 - [Install Tailwind CSS with SvelteKit - Tailwind CSS](https://tailwindcss.com/docs/guides/sveltekit)
 - [Skeleton — UI Toolkit for Svelte + Tailwind](https://www.skeleton.dev/docs/get-started)
@@ -233,6 +229,8 @@ Then open your global stylesheet in `/src/app.css` and **remove** the following 
 - @tailwind utilities;
 ```
 
+leave `src/app.css` empty for now, we will use in later to tweak skeleton and other stuff
+
 Apply these following three changes to your `tailwind.config.cjs`, found in the root of your project.
 
 ```js
@@ -242,7 +240,8 @@ const config = {
 	content: [
 		'./src/**/*.{html,js,svelte,ts}',
 		// append the path for the Skeleton NPM package and files:
-		require('path').join(require.resolve('@skeletonlabs/skeleton'), '../**/*.{html,js,svelte,ts}')
+		require('path').join(require.resolve('@skeletonlabs/skeleton'),
+			'../**/*.{html,js,svelte,ts}')
 	],
 	theme: {
 		extend: {}
@@ -302,11 +301,11 @@ test skeleton and tailwind
 $ pnpm dev
 ```
 
-## Follow Skeleton Quickstart to add some Stuff to our App
+### Follow Skeleton Quickstart to add some Stuff to our App
 
 - [Skeleton — UI Toolkit for Svelte + Tailwind](https://www.skeleton.dev/docs/quickstart)
 
-### add `AppShell` to `+layout.svelte`
+#### add `AppShell` to `+layout.svelte`
 
 `+layout.svelte`
 
@@ -363,7 +362,7 @@ $ pnpm dev
 </AppShell>
 ```
 
-### Add Sidebar Navigation
+#### Add Sidebar Navigation
 
 Let's customize our App Shell's sidebar slot. Open `/src/routes/+layout.svelte` and add the following Tailwind utility classes to the `AppShell` `slotSidebarLeft` prop.
 
@@ -400,9 +399,13 @@ Next, let's implement a navigation list within the App Shell's left sidebar slot
 
 > note: /queries, /mutations and /subscriptions routes will be configured in bellow sections
 
-### Page Setup & Add a Component
+#### Layout Page Setup and Add a Component
 
 Let's add some basic content to our homepage. Open `/src/routes/+page.svelte` and replace the contents with the following. This will **provide multiple elements automatically** styled by the `all.css` stylesheet in our root layout.
+
+> `all.css` is imported from `@skeletonlabs/skeleton/styles/all.css`
+
+`src/routes/+layout.svelte`
 
 ```svelte
 <div class="container mx-auto p-8 space-y-8">
@@ -417,18 +420,25 @@ Let's add some basic content to our homepage. Open `/src/routes/+page.svelte` an
 </div>
 ```
 
-### Add a Component
+#### Add a Component to HomePage
 
 Finally let's implement Skeleton's `Avatar` component. First, import the component, then add it anywhere within your page, we recommend within the `.container` element.
 
+`src/routes/+page.svelte`
+
 ```svelte
+<script lang="ts">
+	...
+  import { Avatar } from '@skeletonlabs/skeleton';
+	...
+</script>
 		...
 	</section>
   <Avatar src="https://i.pravatar.cc/" />
 </div>
 ```
 
-## Add @tabler/icons-svelte
+## Add @tabler/icons-svelte and Add a Test Icon to HomePage
 
 add `@tabler/icons-svelte` dependency
 
@@ -438,14 +448,25 @@ $ pnpm add @tabler/icons-svelte
 
 add `<IconHeart size={48} stroke={1} />` tabler icon to `+page.svelte`
 
+`src/routes/+page.svelte`
+
 ```svelte
+<script lang="ts">
+	...
+	import { IconHeart } from '@tabler/icons-svelte';
+	...
+</script>
 	...
   <Avatar src="https://i.pravatar.cc/" />
   <IconHeart size={48} stroke={1} />
 </div>
 ```
 
-## Final +page.svelte
+## Final HomePage +page.svelte
+
+bellow is the full HomePage
+
+`src/routes/+page.svelte`
 
 ```svelte
 <script lang="ts">
@@ -469,21 +490,25 @@ add `<IconHeart size={48} stroke={1} />` tabler icon to `+page.svelte`
 
 ## Tweak Skeleton Css
 
-currently skeleton buttons and cards, have big rounded corners, let's tweak it in our `app.css`  to have small rounded corners, and to test skeleton styles override
+currently skeleton buttons and cards, have big rounded corners, let's tweak it in our `app.css` to have small rounded corners, and to test **how skeleton styles override works**
 
 `src/app.css`
 
-```postcss
+```css
 /* Write your global styles here, in PostCSS syntax */
-:root{
-  --theme-rounded-container: theme(borderRadius.md);
-  --theme-rounded-base: theme(borderRadius.md);
+:root {
+	--theme-rounded-container: theme(borderRadius.md);
+	--theme-rounded-base: theme(borderRadius.md);
 }
 ```
 
 ## Add No Selection to Css
 
-to prevent user select text, add to bottom of `app.css`
+to prevent user select text in tauri apps, in my opinion this is not a good desktop UX
+
+add to bottom of `app.css`
+
+`src/app.css`
 
 ```css
 body {
@@ -502,26 +527,45 @@ body {
 }
 ```
 
-## Add LightSwitch
+## Add LightSwitch to Layout +layout.svelte
+
+- [Skeleton — UI Toolkit for Svelte + Tailwind](https://www.skeleton.dev/utilities/lightswitches)
 
 add `LightSwitch` component to toggle from light to dark theme
 
 `src/routes/+layout.svelte`
 
+add `LightSwitch, autoModeWatcher` to existing skeleton imports
+
+then add the following in your root layout template markup.
+
+```html
+<svelte:head>{@html `<script>${autoModeWatcher.toString()} autoModeWatcher();</script>`}</svelte:head>
+```
+
 ```svelte
-...
-import { LightSwitch } from '@skeletonlabs/skeleton';
-...
+<script>
+	...
+	// skeleton imports
+	import { AppShell, AppBar, LightSwitch, autoModeWatcher } from '@skeletonlabs/skeleton';
+	...
+</script>
+
+<svelte:head>{@html `<script>${autoModeWatcher.toString()} autoModeWatcher();</script>`}</svelte:head>
+					...	
 					GitHub
 				</a>
 				<LightSwitch />
 			</svelte:fragment>
 		</AppBar>
-	</svelte:fragment>
-	<svelte:fragment slot="sidebarLeft">
+		...
 ```
 
-now we have one `<Avatar />`, one <LightSwitch /> and one `<IconHeart />` test components, to assert that everything is working
+awesome, now we have one `<Avatar />`, one `<IconHeart />` and one <LightSwitch /> test components, to assert that everything is working
+
+> Note: currently lightswitch don't work has expected, in my linux system, with OS define in dark, the lightswitch start in dark, but theme shows in light. If we toggle, it works as expected, only the initial start mode is not the correct, it should start in dark and not in light, the problem is in `src/routes/+layout.ts` in line `export const ssr = false;`, if we comment that line it start work has expected, but tauri recommend that we [disable SSR](https://tauri.app/v1/guides/getting-started/setup/sveltekit/#sveltekit-in-ssg-mode)
+
+> try to figure it out asap, if anyone know how to fix it, please tell me, really appreciate it
 
 ## Add Sidebar Navigation Routes
 
@@ -574,158 +618,19 @@ $ git add .
 $ git commit -am "before add graphql server"
 ```
 
-## Add Minimal GraphQL Server
+## Start InMemory Minimal GraphQL Server with SSE
+
+run in one window, and leave it open, houdini require it running to do it's magic
 
 ```shell
-$ mkdir server
+$ cd graphql-sse/ && pnpm dev
 ```
 
-create `server/package.json`
-
-```json
-{
-	"name": "svelte-kit-houdini-typescript-tauri-server",
-	"version": "0.0.1",
-	"type": "module",
-	"scripts": {
-		"server": "node server.js"
-	},
-	"dependencies": {
-		"cors": "^2.8.5",
-		"express": "^4.18.2",
-		"express-graphql": "^0.12.0",
-		"graphql": "^16.6.0",
-		"graphql-subscriptions": "^2.0.0",
-		"subscriptions-transport-ws": "^0.11.0"
-	}
-}
-```
-
-### Install dependencies
-
-```shell
-$ cd server && pnpm i && cd ..
-```
-
-create `server/server.js`
-
-```js
-import express from 'express';
-import { graphqlHTTP } from 'express-graphql';
-import { buildSchema, execute, subscribe } from 'graphql';
-// pull in some specific Apollo packages:
-import { PubSub } from 'graphql-subscriptions';
-import { SubscriptionServer } from 'subscriptions-transport-ws';
-// cors
-import cors from 'cors';
-
-// resolvers
-const books = [{
-	title: 'Some non sense Title',
-	author: 'Mário Monteiro'
-}, {
-	title: 'Lost imagination',
-	author: 'Alexandre Monteiro'
-}];
-const createBook = (value) => {
-	books.push(value);
-	return value;
-}
-
-// create a server:
-const app = express();
-
-// create a schema and a root resolver:
-const schema = buildSchema(`#graphql
-	type Book {
-		title: String!
-		author: String!
-	}
-	type Query {
-		books: [Book!]!
-	}
-  type Mutation {
-    createBook(title: String!, author: String!): Book!
-  }
-	# new: subscribe to all the latest books!
-	type Subscription {
-		newBooks: Book!
-	}
-`);
-
-const pubsub = new PubSub();
-
-const rootValue = {
-	books,
-	createBook,
-	newBooks: () => pubsub.asyncIterator('BOOKS_TOPIC')
-};
-
-// enable cors
-app.use(cors());
-
-// handle incoming HTTP requests as before:
-app.use(
-	graphqlHTTP({
-		schema,
-		rootValue,
-	})
-);
-
-// start the server:
-const server = app.listen(5001, () => console.log('server started on port 5001'));
-
-// handle incoming websocket subscriptions too:
-SubscriptionServer.create(
-	{ schema, rootValue, execute, subscribe },
-	{
-		// Listens for 'upgrade' websocket events on the raw server
-		server
-	}
-);
-
-// 5sec time later, push updates to subscribers:
-setInterval(() => {
-	pubsub.publish('BOOKS_TOPIC', {
-		title: 'Dreamers Flight',
-		author: 'Jorge Monteiro'
-	});
-}, 5000);
-```
-
-### Add Scripts to Root Package.json
-
-```json
-{
-	"scripts": {
-		"server": "cd server && node server.js"
-	}
-}
-```
-
-### Run Server
-
-in a new terminal run:
-
-```shell
-$ pnpm run server
-Server started on port 5001
-```
-
-> leave server running, houdini require a running server to create runtime in boot, and to work with hot reload, and graphql changes to
-
-## Commit Project
-
-```shell
-$ git add .
-$ git commit -am "before setup houdini"
-```
+check running graphql server url at `http://localhost:5001/graphql`
 
 ## Setup Houdini
 
 - [Houdini - Setting Up Your Project](https://www.houdinigraphql.com/guides/setting-up-your-project)
-
-use running graphql server url `http://localhost:5001/graphql`
 
 ```shell
 $ pnpm dlx houdini@latest init
@@ -817,7 +722,7 @@ above `pnpm dlx houdini@latest init` command, makes some **black magic** on our 
 
 ### Tweak Houdini Config
 
-we opted to don't use cache, for this we add `defaultCachePolicy: 'NetworkOnly'` to config, to define `defaultCachePolicy` globally to whole project
+we opted to don't use cache, for this we add `defaultCachePolicy: 'NetworkOnly'` in config, to define `defaultCachePolicy` globally to whole project
 
 ```js
 /// <references types="houdini-svelte">
@@ -840,18 +745,41 @@ export default config;
 
 ### Create Queries Page
 
-to see how houdini simplify our lifes, let's populate our recent created pages
+to see how houdini simplify our lifes, let's populate our recent created pages, but first create `BookCard` component needed by queries page
+
+`src/components/BookCard.svelte`
+
+```svelte
+<script lang='ts'>
+	import type { Book } from "$lib/types";
+
+  export let book: Book;
+</script>
+
+<div class="card">
+	<header class="card-header">{book.title}</header>
+	<section class="p-4">
+    <p>{book.description}</p>
+    <p>author: {book.author}</p>
+  </section>
+	<footer class="card-footer">(footer)</footer>
+</div>
+```
+
+now replace our queries
 
 `src/routes/queries/+page.svelte`
 
 ```svelte
 <script lang="ts">
 	import type { PageData } from './$houdini';
+	import { cache, graphql } from '$houdini';
+	import { BookCard } from '../../components';
 
 	export let data: PageData;
 
 	$: ({ Books } = data);
-	// $: console.log(JSON.stringify($Books.data, undefined, 2));
+	$: console.log(JSON.stringify($Books.data, undefined, 2));
 </script>
 
 <div class="container mx-auto p-8 space-y-8">
@@ -859,15 +787,15 @@ to see how houdini simplify our lifes, let's populate our recent created pages
 		<h1 class="mb-5">Queries</h1>
 	</section>
 	<main>
-		<ul>
+		<div class="grid sm:gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
 			{#if $Books?.data?.books}
 				{#each $Books.data.books as book}
 					{#if book}
-						<li>title: {book.title} / author: {book.author}</li>
+						<BookCard {book} />
 					{/if}
 				{/each}
 			{/if}
-		</ul>
+		</div>
 	</main>
 </div>
 ```
@@ -878,22 +806,22 @@ add graphql query
 
 ```gql
 query Books {
-  books{
-    title
-    author
-  }
+	books {
+		id
+		title
+		author
+		image
+		description
+		price
+	}
 }
 ```
 
-with that minimal changes, we have a **server side rendering page** with a houdini query, 
-without need to create a `+page.server.ts`, it simply works
+with that minimal changes, we have a **server side rendering page** with a houdini query working, without need to create a `+page.server.ts`, it simply works
 
-run app and check results in `http://localhost:5173/queries` page, we should see the query result
+run app and check results in `http://localhost:5173/queries` page, we should see the query result with tow cards
 
-- title: Some non sense Title / author: Mário Monteiro
-- title: Lost imagination / author: Alexandre Monteiro
-
-### Create Mutations Page
+### Add Faker and Create Mutations Page
 
 add `faker` dependency
 
@@ -901,7 +829,7 @@ add `faker` dependency
 $ pnpm add @faker-js/faker
 ```
 
-now create mutation `+page.svelte`
+now create mutation `+page.svelte` with some minimal CRUD GraphQL operations to test **Create, Update and Delete Book's**
 
 `src/routes/mutations/+page.svelte`
 
@@ -911,10 +839,40 @@ now create mutation `+page.svelte`
 	import { faker } from '@faker-js/faker';
 
 	const createBook = graphql(`
-		mutation CreateBook($title: String!, $author: String!) {
-			createBook(title: $title, author: $author) {
+		mutation CreateBook($input: BookInput!) {
+			createBook(input: $input) {
+				id
 				title
 				author
+				image
+				description
+				price
+			}
+		}
+	`);
+
+	const updateBook = graphql(`
+		mutation UpdateBook($id: ID!, $input: BookInput!) {
+			updateBook(id: $id, input: $input) {
+				id
+				title
+				author
+				image
+				description
+				price
+			}
+		}
+	`);
+
+	const deleteBook = graphql(`
+		mutation DeleteBook($id: ID!) {
+			deleteBook(id: $id) {
+				id
+				title
+				author
+				image
+				description
+				price
 			}
 		}
 	`);
@@ -926,12 +884,38 @@ now create mutation `+page.svelte`
 	</section>
 	<main>
 		<button
-			class="btn btn-sm variant-filled-primary"
+			class="btn btn-sm variant-filled-tertiary"
 			on:click={() =>
 				createBook.mutate({
-					title: faker.word.adjective(2),
-					author: faker.word.adjective(2)
+					input: {
+						title: faker.word.adjective(2),
+						author: faker.word.adjective(2),
+						image: faker.image.abstract(640, 360, true),
+						description: faker.lorem.sentence(5),
+						price: parseInt(faker.random.numeric(42))
+					}
 				})}>Create Book</button
+		>
+		<button
+			class="btn btn-sm variant-filled-tertiary"
+			on:click={() =>
+				updateBook.mutate({
+					id: '3',
+					input: {
+						title: faker.word.adjective(2),
+						author: faker.word.adjective(2),
+						image: faker.image.abstract(640, 360, true),
+						description: faker.lorem.sentence(5),
+						price: parseInt(faker.random.numeric(42))
+					}
+				})}>Update Book</button
+		>
+		<button
+			class="btn btn-sm variant-filled-primary"
+			on:click={() =>
+				deleteBook.mutate({
+					id: '3'
+				})}>Delete Book</button
 		>
 	</main>
 </div>
@@ -939,14 +923,15 @@ now create mutation `+page.svelte`
 
 ### Create Subscriptions Page
 
-change `src/client.ts`
+change `src/client.ts` to
 
 ```ts
 import { HoudiniClient, subscription } from '$houdini';
 
 function sseSockets() {
   return {
-    subscribe(payload, handlers) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    subscribe(payload: any, handlers: any) {
       const url = new URL('/graphql', 'http://localhost:5001');
       url.searchParams.append('query', payload.query);
       url.searchParams.append('variables', JSON.stringify(payload.variables));
@@ -964,13 +949,41 @@ function sseSockets() {
 export default new HoudiniClient({
   url: "http://localhost:5001/graphql",
   plugins: [
-    subscription(sseSockets)
+    subscription(sseSockets),
   ]
 })
 ```
 
-create subscriptions `+page.svelte`
+create subscriptions page `+page.svelte`
 
 `src/routes/subscriptions/+page.svelte`
 
+```svelte
+<script lang="ts">
+	import { graphql } from '$houdini';
 
+	// will start listening onMount (browser only)
+	const updates = graphql(`
+		subscription NewBooks {
+			newBooks {
+				title
+				author
+			}
+		}
+	`);
+
+	$: updates.listen();
+	$: console.log(`$updates.data: [${JSON.stringify($updates.data)}]`);
+</script>
+
+<div class="container mx-auto p-8 space-y-8">
+	<section>
+		<h1>Subscriptions</h1>
+	</section>
+	<main>
+		<ul class="li">Last created book</ul>
+		<ul class="li">title: {$updates?.data?.newBooks.title || 'none'}</ul>
+		<ul class="li">author: {$updates?.data?.newBooks.author || 'none'}</ul>
+	</main>
+</div>
+```

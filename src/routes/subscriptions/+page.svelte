@@ -13,6 +13,7 @@
 
 	$: updates.listen();
 	$: console.log(`$updates.data: [${JSON.stringify($updates.data)}]`);
+	// TODO: cleanup code
 	// mutate cache with received update, this will replace whole cache
 	// $: {
 	// 	cache.write({

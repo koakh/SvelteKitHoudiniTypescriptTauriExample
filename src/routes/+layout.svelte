@@ -6,8 +6,11 @@
 	import '@skeletonlabs/skeleton/styles/all.css';
 	// finally, your application's global stylesheet (sometimes labeled 'app.css')
 	import '../app.css';
-	import { AppShell, AppBar, LightSwitch } from '@skeletonlabs/skeleton';
+	// skeleton imports
+	import { AppShell, AppBar, LightSwitch, autoModeWatcher } from '@skeletonlabs/skeleton';
 </script>
+
+<svelte:head>{@html `<script>${autoModeWatcher.toString()} autoModeWatcher();</script>`}</svelte:head>
 
 <!-- App Shell -->
 <AppShell slotSidebarLeft="bg-surface-500/5 w-56 p-4">

@@ -1,4 +1,10 @@
 Project:
+  ☐ @critical start in dark mode but doesn't show it
+    the problem is this line 
+    `export const ssr = false;` in `src/routes/+layout.ts`
+    if we commented it, it starts to work
+  ☐ change hardcoded config things with svelte env variables
+    ☐ src/client.ts
   ☐ debug frontend
   ☐ debug backend
   ✔ simple yoga sse server with moked data @done(23-03-18 19:30)
