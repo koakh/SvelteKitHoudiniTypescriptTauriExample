@@ -7,7 +7,10 @@
 	// finally, your application's global stylesheet (sometimes labeled 'app.css')
 	import '../app.css';
 	// skeleton imports
-	import { AppShell, AppBar, LightSwitch, autoModeWatcher } from '@skeletonlabs/skeleton';
+	import { AppShell, AppBar, LightSwitch, autoModeWatcher, setModeCurrent } from '@skeletonlabs/skeleton';
+
+	// force darkMode, until we find how to use autoModeWatcher with SSR disabled
+	setModeCurrent(false);
 </script>
 
 <svelte:head>{@html `<script>${autoModeWatcher.toString()} autoModeWatcher();</script>`}</svelte:head>

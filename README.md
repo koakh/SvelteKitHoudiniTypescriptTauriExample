@@ -31,6 +31,8 @@
 		- [Create Queries Page](#create-queries-page)
 		- [Add Faker and Create Mutations Page](#add-faker-and-create-mutations-page)
 		- [Create Subscriptions Page](#create-subscriptions-page)
+		- [Play with App and Test Queries, Mutations and Subscriptions until This Point](#play-with-app-and-test-queries-mutations-and-subscriptions-until-this-point)
+	- [Setup SuperForms and Create some Forms for Create and Update Mutations](#setup-superforms-and-create-some-forms-for-create-and-update-mutations)
 
 ## Install Rust
 
@@ -567,6 +569,20 @@ awesome, now we have one `<Avatar />`, one `<IconHeart />` and one <LightSwitch 
 
 > try to figure it out asap, if anyone know how to fix it, please tell me, really appreciate it
 
+to temporary fix the problem we force the dark mode ate start adding `setModeCurrent` to imports and use `setModeCurrent(false);`
+
+```svelte
+<script>
+	...
+	// skeleton imports
+	import { AppShell, AppBar, LightSwitch, autoModeWatcher, setModeCurrent } from '@skeletonlabs/skeleton';
+
+	// force darkMode, until we find how to use autoModeWatcher with SSR disabled
+	setModeCurrent(false);
+	...
+</script>
+```
+
 ## Add Sidebar Navigation Routes
 
 create bellow pages to be used with houdini demo
@@ -987,3 +1003,20 @@ create subscriptions page `+page.svelte`
 	</main>
 </div>
 ```
+
+### Play with App and Test Queries, Mutations and Subscriptions until This Point
+
+run app and server if not already running
+
+```shell
+# run server in terminal window 1
+$ cd graphql-sse/ && pnpm dev
+# run app in terminal window 2
+$ pnpm dev
+```
+
+open two browser windows one with <http://localhost:5173/subscriptions> page and the other with <http://localhost:5173/mutations> to test subscriptions, when click **Create Book** you should see subscrptions page update with the new created book
+
+## Setup SuperForms and Create some Forms for Create and Update Mutations
+
+
