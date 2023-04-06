@@ -43,11 +43,11 @@ mutation CreateBook($input: BookInput!) {
 
 {
   "input": {
-    "title": "Koakh World",
-    "author": "Madness",
-    "image": "https://loremflickr.com/640/360",
-    "description": "Curabitur vel lobortis nunc, at accumsan diam. Nullam in nulla tristique, tincidunt eros pellentesque, faucibus libero. Integer eget fermentum mauris. Quisque eu scelerisque orci, non posuere enim. Sed ornare interdum nunc a porta. Etiam vehicula scelerisque consectetur. Integer semper ante vitae egestas maximus...",
-    "price": 7.14
+  	"title": "Madness",
+  	"author": "Koakh",
+    "image": "https://i.pravatar.cc/150?img=14",
+    "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores nobis quae veniam, et iusto reiciendis",
+    "price": 28.00
   }
 }
 

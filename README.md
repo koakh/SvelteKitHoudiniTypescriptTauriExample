@@ -32,7 +32,12 @@
 		- [Add Faker and Create Mutations Page](#add-faker-and-create-mutations-page)
 		- [Create Subscriptions Page](#create-subscriptions-page)
 		- [Play with App and Test Queries, Mutations and Subscriptions until This Point](#play-with-app-and-test-queries-mutations-and-subscriptions-until-this-point)
-	- [Setup SuperForms and Create some Forms for Create and Update Mutations](#setup-superforms-and-create-some-forms-for-create-and-update-mutations)
+	- [Setup SuperForms and ZOD and Create some Forms for Create and Update Mutations](#setup-superforms-and-zod-and-create-some-forms-for-create-and-update-mutations)
+		- [Create Book Form](#create-book-form)
+			- [TODO: Create Book Server Page](#todo-create-book-server-page)
+			- [TODO: Create Book Client Page](#todo-create-book-client-page)
+			- [TODO: Create Book +page.ts](#todo-create-book-pagets)
+		- [TODO: Update Book Form](#todo-update-book-form)
 
 ## Install Rust
 
@@ -410,15 +415,22 @@ Let's add some basic content to our homepage. Open `/src/routes/+page.svelte` an
 `src/routes/+layout.svelte`
 
 ```svelte
+<script lang="ts">
+  import { Avatar } from '@skeletonlabs/skeleton';
+	import { IconHeart } from '@tabler/icons-svelte';
+</script>
+
 <div class="container mx-auto p-8 space-y-8">
 	<h1>Hello Skeleton</h1>
-	<p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-		<p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-	</section>
+	<p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Molestiae soluta maxime enim facilis id dolore nobis laborum asperiores qui tenetur deleniti vitae consectetur dignissimos quibusdam, at amet. Earum, vitae delectus!</p>
+	<p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptatem, cumque consequatur. Debitis at maiores velit repellat! Odit aliquid alias voluptatum delectus? Voluptate inventore laudantium ab commodi alias quos ipsam adipisci.</p>
+	<section>
 		<a class="btn variant-filled-primary" href="https://kit.svelte.dev/" target="_blank" rel="noreferrer">SvelteKit</a>
 		<a class="btn variant-filled-secondary" href="https://tailwindcss.com/" target="_blank" rel="noreferrer">Tailwind</a>
 		<a class="btn variant-filled-tertiary" href="https://github.com/" target="_blank" rel="noreferrer">GitHub</a>
 	</section>
+  <Avatar src="https://i.pravatar.cc/" />
+  <IconHeart size={48} stroke={1} />
 </div>
 ```
 
@@ -1017,6 +1029,50 @@ $ pnpm dev
 
 open two browser windows one with <http://localhost:5173/subscriptions> page and the other with <http://localhost:5173/mutations> to test subscriptions, when click **Create Book** you should see subscrptions page update with the new created book
 
-## Setup SuperForms and Create some Forms for Create and Update Mutations
+## Setup SuperForms and ZOD and Create some Forms for Create and Update Mutations
 
+install `sveltekit-superforms` dependency
 
+```shell
+$ pnpm add sveltekit-superforms zod
+```
+
+### Create Book Form
+
+add link to NavBar
+
+`src/routes/+layout.svelte`
+
+```svelte
+		<!-- Insert the list: -->
+		<nav class="list-nav">
+			<ul>
+				...
+				<li><a href="/create-book">Create Book</a></li>
+			</ul>
+		</nav>
+```
+
+#### TODO: Create Book Server Page
+
+`src/routes/create-book/+page.server.ts`
+
+#### TODO: Create Book Client Page
+
+`src/routes/create-book/+page.svelte`
+
+#### TODO: Create Book +page.ts
+
+`src/routes/create-book/+page.ts`
+
+```ts
+// prevent Error: Cannot prerender pages with actions
+export const prerender = false;
+```
+
+see:
+
+- [Why actions in SveltKit give &quot;Error: Cannot prerender pages with actions&quot;?](https://stackoverflow.com/questions/75044874/why-actions-in-sveltkit-give-error-cannot-prerender-pages-with-actions)
+- [SvelteKit docs](https://kit.svelte.dev/docs/page-options#prerender-when-not-to-prerender)
+
+### TODO: Update Book Form

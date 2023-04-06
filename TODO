@@ -12,6 +12,12 @@ Project:
   ☐ add price, description and image
   ☐ jwt authentication, maybe oauth2 auth.js
   ☐ @critical add delete mutation
-  ☐ Fix: MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 close listeners added to [Server]. Use emitter.setMaxListeners() to increase limit
+  ☐ @critical GraphQL Server: Fix: MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 close listeners added to [Server]. Use emitter.setMaxListeners() to increase limit
+    https://copyprogramming.com/howto/graphql-subscriptions-max-listeners-exceeded-warning
     https://stackoverflow.com/questions/43752073/graphql-subscriptions-max-listeners-exceeded-warning
   ☐ @critical improve error handling, ex book not found
+  ☐ NavBar selected item if on page
+  ☐ Create Book and Update Book must use same form component
+    ☐ create `BookUpsertForm` to be used in both modes
+    ☐ use all operation fields, and put mutation working
+    ☐ style form a la tailwind

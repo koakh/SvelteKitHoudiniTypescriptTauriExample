@@ -60,6 +60,7 @@
 				<li><a href="/queries">Queries</a></li>
 				<li><a href="/mutations">Mutations</a></li>
 				<li><a href="/subscriptions">Subscriptions</a></li>
+				<li><a href="/create-book">Create Book</a></li>
 			</ul>
 		</nav>
 		<!-- --- -->

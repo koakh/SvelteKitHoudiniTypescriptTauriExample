@@ -40,6 +40,8 @@
 	"type": "module",
 	"dependencies": {
 		"@faker-js/faker": "^7.6.0",
-		"@tabler/icons-svelte": "^2.7.0"
+		"@tabler/icons-svelte": "^2.7.0",
+		"sveltekit-superforms": "^0.6.10",
+		"zod": "^3.21.4"
 	}
 }

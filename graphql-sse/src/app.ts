@@ -1,9 +1,8 @@
-import { Socket } from 'net'
-import { createServer } from 'http'
-import { createYoga, createSchema, createPubSub } from 'graphql-yoga'
-import { useGraphQLSSE } from '@graphql-yoga/plugin-graphql-sse'
-
+import { useGraphQLSSE } from '@graphql-yoga/plugin-graphql-sse';
 import * as dotenv from 'dotenv';
+import { createPubSub, createSchema, createYoga } from 'graphql-yoga';
+import { createServer } from 'http';
+import { Socket } from 'net';
 
 dotenv.config();
 
@@ -68,7 +67,7 @@ const deleteBook = ({ id }) => {
     throw new Error('book not found');
   };
   const deleted = books[idx];
-  books = books.filter(e => e.id !== parseInt(id));
+  books = books.filter(e => Number(e.id) !== Number(id));
   return deleted;
 };
 
