@@ -10,7 +10,7 @@
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write .",
 		"tauri": "cargo tauri dev",
-		"server": "cd graphql-sse/ && pnpm dev"
+		"server": "cd graphql-sse && pnpm dev"
 	},
 	"devDependencies": {
 		"@skeletonlabs/skeleton": "^1.1.0",

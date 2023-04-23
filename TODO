@@ -1,4 +1,7 @@
 Project:
+  ☐ @critical add tailwind form and use it in http://localhost:5173/create-book
+
+
   ☐ @critical start in dark mode but doesn't show it
     the problem is this line 
     `export const ssr = false;` in `src/routes/+layout.ts`
