@@ -1,12 +1,14 @@
 import { useGraphQLSSE } from "@graphql-yoga/plugin-graphql-sse";
 import * as dotenv from "dotenv";
+import * as fs from "fs";
 import { createPubSub, createSchema, createYoga } from "graphql-yoga";
 import { createServer } from "http";
 import { Socket } from "net";
-import * as fs from "fs";
 import * as sharp from "sharp";
 
 dotenv.config();
+
+const { TEMP_PATH, IMAGE_WIDTH, IMAGE_HEIGHT } = process.env;
 
 const pubSub = createPubSub<{
 	// make the event emitter type-safe
@@ -102,7 +104,9 @@ const typeDefs = /* GraphQL */ `
     createBook(input: BookInput!): Book!
     updateBook(id: ID!, input: BookInput!): Book!
     deleteBook(id: ID!): Book!
-    readTextFile(file: File!): String!
+    uploadTextFile(file: File!): String!
+		uploadFile(file: File!): String!
+		uploadImage(file: File!): String!
   }
   # subscriptions
   type Subscription {
@@ -150,12 +154,20 @@ const resolvers = {
 			pubSub.publish("deletedBooks", deleted);
 			return deleted;
 		},
-		readTextFile: async (parent: unknown, { file }: { file: File }, ctx) => {
-			// const textContent = await file.text();
-			// return textContent;
-
-			const filePath = `/tmp/${file.name}`;
-
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		uploadTextFile: async (parent: unknown, { file }: { file: File }, ctx) => {
+			const textContent = await file.text();
+			return textContent;
+		},
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		uploadFile: async (parent: unknown, { file }: { file: File }, ctx) => {
+			const filePath = `${TEMP_PATH}/${file.name}`;
+			// const { stream, type, name, size, lastModified } = await file;
+			// console.log(
+			// 	`name: [${name}], type: [${type}], size: [${size}], lastModified: [${formatDate(
+			// 		new Date(lastModified),
+			// 	)}]`,
+			// );
 			console.log(
 				`file: [${JSON.stringify(
 					{ ...file, blobParts: undefined },
@@ -164,61 +176,54 @@ const resolvers = {
 				)}]`,
 			);
 
-			// try #1: any file with async
-			const _file = Buffer.from(await file.arrayBuffer());
-			const { stream, mimetype } = await file;
-			
-				console.log(`stream: [${JSON.stringify(stream, undefined, 2)}]`);
-				console.log(`mimetype: [${mimetype}]`);
-			// Now use stream to either write file at local disk or CDN
-			if (_file) {
+			// binary file with async
+			const arrayBuffer = Buffer.from(await file.arrayBuffer());
+			// use stream to either write file at local disk or CDN
+			if (arrayBuffer) {
 				try {
-					// fs.writeFileSync(filePath, _file)
-					await fs.promises.writeFile(filePath, _file);
+					await fs.promises.writeFile(filePath, arrayBuffer);
 				} catch (error) {
 					console.error(error);
 				}
 			}
 
-			// try #1: any file without async
-			// https://stackoverflow.com/questions/74797614/upload-file-with-apollo-upload-client-and-graphql-yoga-3-x
-			// const _file = Buffer.from(await file.arrayBuffer());
-			// if (_file) {
-			//   try {
-			//     fs.writeFileSync(filePath, _file)
-			//   }
-			//   catch (error) {
-			//     console.error(error)
-			//   }
-			// }
+			return `written to '${filePath}'`;
+		},
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		uploadImage: async (parent: unknown, { file }: { file: File }, ctx) => {
+			const filePath = `${TEMP_PATH}/${file.name}`;
+			// const { stream, type, name, size, lastModified } = await file;
+			// console.log(
+			// 	`name: [${name}], type: [${type}], size: [${size}], lastModified: [${formatDate(
+			// 		new Date(lastModified),
+			// 	)}]`,
+			// );
+			console.log(
+				`file: [${JSON.stringify(
+					{ ...file, blobParts: undefined },
+					undefined,
+					2,
+				)}]`,
+			);
 
-			// # try #2 : using sharp image process
-			// https://stackoverflow.com/questions/74797614/upload-file-with-apollo-upload-client-and-graphql-yoga-3-x
-			// const _file = Buffer.from(await file.arrayBuffer());
-			// if (_file) {
-			// 	const image = sharp(_file);
-			// 	const metadata = await image.metadata();
-			// 	console.log(metadata, "metadata");
-			// 	try {
-			// 		const image = await sharp(_file).resize(600, 600) //.webp().toBuffer();
-			//       .jpeg({ mozjpeg: true });
-			// 		fs.writeFileSync(filePath, image);
-			// 		console.log(image, "image");
-			// 	} catch (error) {
-			// 		console.error(error);
-			// 	}
-			// };
+			const arrayBuffer = Buffer.from(await file.arrayBuffer());
+			if (arrayBuffer) {
+				const image = sharp(arrayBuffer);
+				const metadata = await image.metadata();
+				console.log(metadata, "metadata");
+				try {
+					const image = await sharp(arrayBuffer)
+						.resize(Number(IMAGE_WIDTH), Number(IMAGE_HEIGHT))
+						.jpeg({ mozjpeg: true })
+						.toBuffer();
+					fs.writeFileSync(filePath, image);
+					console.log(image, "image");
+				} catch (error) {
+					console.error(error);
+				}
+			}
 
-			// # try #1
-			// https://gist.github.com/bberak/4ab2abee49e5f3e7be3143415e52bae5
-			// const kb = 32 * 1024;
-			// const buf = Buffer.alloc(kb);
-			// const ws = fs.createWriteStream(filePath);
-			// buf.fill(0xea);
-			// ws.write(buf);
-			// ws.end();
-
-			return `write to file 'file.name' to '${filePath}'`;
+			return `written to '${filePath}'`;
 		},
 	},
 	Subscription: {
@@ -249,8 +254,8 @@ const resolvers = {
 	},
 };
 
-// const context = async ({req}) => {
-//   // console.log(req.headers);
+// const context = async ({ req }) => {
+// 	console.log(req.headers);
 // };
 
 export function buildApp() {
