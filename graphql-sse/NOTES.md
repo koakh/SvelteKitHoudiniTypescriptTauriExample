@@ -24,20 +24,31 @@ For anyone trying to run GraphQL subscriptions in production, I strongly recomme
 
 ## Yoga 3 File Uploads
 
-- [File Uploads – GraphQL Yoga](https://the-guild.dev/graphql/yoga-server/docs/features/file-uploads)
-- [https://javascript.plainenglish.io/how-to-implement-a-file-upload-server-with-node-js-83043bc180fc](https://javascript.plainenglish.io/how-to-implement-a-file-upload-server-with-node-js-83043bc180fc)
+read full notes at `GraphQL - Yoga3`
+
+test curls
 
 ```shell
 # generate a random file : 10000000 = 10mb
 $ base64 /dev/urandom | head -c 10000000 > /tmp/file.txt
 
+# uploadTextFile
+$ FILE="/tmp/file.txt"
 $ curl localhost:5001/graphql \
-  -F operations='{ "query": "mutation ($file: File!) { readTextFile(file: $file) }", "variables": { "file": null } }' \
+  -F operations='{ "query": "mutation ($file: File!) { uploadTextFile(file: $file) }", "variables": { "file": null } }' \
   -F map='{ "0": ["variables.file"] }' \
-  -F 0=@/tmp/file.txt
+  -F 0=@${FILE}
+
+# uploadFile
+$ FILE="/home/mario/Downloads/ISOs/Fedora-Workstation-Live-x86_64-36-1.5.iso"
+$ curl localhost:5001/graphql \
+  -F operations='{ "query": "mutation ($file: File!) { uploadFile(file: $file) }", "variables": { "file": null } }' \
+  -F map='{ "0": ["variables.file"] }' \
+  -F 0=@${FILE}
+
+$ FILE="/home/mario/Downloads/WallPapers/wp6511836-black-water-wallpapers.jpg"
+$ curl localhost:5001/graphql \
+  -F operations='{ "query": "mutation ($file: File!) { uploadImage(file: $file) }", "variables": { "file": null } }' \
+  -F map='{ "0": ["variables.file"] }' \
+  -F 0=@${FILE}
 ```
-
-### Extend with Binnary Files and Async fs.promises.writeFile
-
-- [Upload file with apollo-upload-client and graphql-yoga 3.x](https://stackoverflow.com/questions/74797614/upload-file-with-apollo-upload-client-and-graphql-yoga-3-x)
-- [Node.js fsPromises.writeFile() Method - GeeksforGeeks](https://www.geeksforgeeks.org/node-js-fspromises-writefile-method/)
